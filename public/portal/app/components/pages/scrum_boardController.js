@@ -26,7 +26,8 @@ angular
                 name: 'Done'
             }];
 
-            $scope.tasks_list = $scope.selectize_planets_options
+            $scope.selected_courses = [];
+            $scope.tasks_list = $scope.selected_courses;
 
             // $scope.tasks_list = tasks_list;
 
@@ -41,9 +42,49 @@ angular
                 }
             };
 
+            $scope.$watchCollection(
+                "forms_advanced.selectize_planets",
+                function( newValues, oldValues ) {
+                    oldValues = oldValues || []
+                    newValues = newValues || []
+                    if (newValues.length > oldValues.length){
+                        // $scope.tasks_list = [];
+                        _.each(newValues,function(id){
+                            var course = _.find($scope.selectize_planets_options, function(course) {
+                                return course.id == id;
+                            });
+                            var isExist = _.find($scope.tasks_list, function(task) {
+                                return task.id == course.id;
+                            });
+                            console.log(isExist)
+                            if(undefined == isExist){
+                                $scope.tasks_list.push(course);
+                            }
+                        })
+                        console.log($scope.task_list);
 
+                    }else{
+                        var taskID = _.difference(oldValues, newValues);
+                        for(var i = $scope.tasks_list.length - 1; i >= 0; i--){
+                            if($scope.tasks_list[i].id == taskID){
+                                $scope.tasks_list.splice(i,1);
+                            }
+                        }
+                    }
+
+                }
+            );
 
             $scope.$on('tasks.drop', function(e, el, target, source) {
+                var groupId = target[0].id;
+                var taskHTML = (el[0].innerHTML);
+                var taskNode = angular.element(taskHTML);
+                var taskId = taskNode.find("#task_id").val();
+                var foundTask = _.find($scope.tasks_list, function(task){
+                    return task.id == taskId;
+                })
+                console.log($scope.tasks_list);
+                foundTask.group = groupId;
                 console.log(target[0].id);
             });
 
@@ -59,6 +100,8 @@ angular
                     })
                 });
 
+
+
                 $scope.selectize_planets_config = {
                     plugins: {
                         'remove_button': {
@@ -72,12 +115,13 @@ angular
                     create: false,
                     render: {
                         option: function(item, escape) {
-                            var str = "{{course}}, {{start_date}} - {{credit_hours}} credits {{location}}"
+                            var str = "{{course}}, {{start_date}} - {{credit_hours}} credits {{location}} : {{course_number}}"
                             var values = {
                                 course: item.course_name,
                                 start_date: moment(item.start_date).format("YYYY/MM/DD ddd").toString(),
                                 credit_hours: item.credit_hours,
-                                location: item.site_name
+                                location: item.site_name,
+                                course_number: item.course_number,
                             }
 
                             var option_item = S(str).template(values).s
@@ -87,7 +131,7 @@ angular
                                 '</div>';
                         },
                         item: function(planets_data, escape) {
-                            return '<div class="item"><a href="' + escape(planets_data.url) + '" target="_blank">' + escape(planets_data.course_name) + '</a></div>';
+                            return '<div class="item"><a href="' + escape(planets_data.url) + '" target="_blank">'+ escape(planets_data.course_number) + ":" + escape(planets_data.course_name) + '</a></div>';
                         }
                     }
                 };

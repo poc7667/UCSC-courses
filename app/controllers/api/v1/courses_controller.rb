@@ -28,7 +28,7 @@ class Api::V1::CoursesController < ApplicationController
 
     respond_to do |format|
       if @course.save
-        format.json { render :show, status: :created %> }
+        format.json { render :show, status: :created }
       else
         format.json { render json: @course.errors, status: :unprocessable_entity }
       end

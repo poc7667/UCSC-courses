@@ -4,7 +4,7 @@ class Api::V1::CoursesController < ApplicationController
   # GET /courses
   # GET /courses.json
   def index
-    @courses = Course.all
+    @courses = Course.first(30)
   end
 
   # GET /courses/1

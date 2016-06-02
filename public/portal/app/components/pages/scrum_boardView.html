@@ -9,6 +9,7 @@
                         <selectize id="selec_adv_1" config="selectize_planets_config" options="selectize_planets_options" position="bottom" ng-model="forms_advanced.selectize_planets"></selectize>
                     </div>
                     {{forms_advanced.selectize_planets}}
+                    <!-- {{selectize_planets_options}} -->
                 </div>
             </div>
         </div>
@@ -22,7 +23,7 @@
                         <div class="dragula dragula-vertical" dragula-scope="$parent" dragula='"tasks"' dragula-model='dragula_tasks' id="{{ group.id }}">
                             <div ng-repeat="task in tasks_list | filter: { group: group.id }">
                                 <div class="scrum_task {{ task.status }}">
-                                    <h3 class="scrum_task_title"><a href="#task_info" data-uk-modal="{ center:true }" ng-click="taskInfo(task)">{{ task.name }}</a></h3>
+                                    <h3 class="scrum_task_title"><a href="#task_info" data-uk-modal="{ center:true }" ng-click="taskInfo(task)">{{ task.course_name }}</a></h3>
                                     <p class="scrum_task_description">{{ task.description }}</p>
                                     <p class="scrum_task_info"><span class="uk-text-muted">Assignee:</span> <a href="#">{{ task.assignee }}</a></p>
                                 </div>

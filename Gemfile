@@ -115,3 +115,5 @@ gem 'elasticsearch-model', git: 'git://github.com/elasticsearch/elasticsearch-ra
 gem 'elasticsearch-rails', git: 'git://github.com/elasticsearch/elasticsearch-rails.git'
 
 gem "i18n-js", ">= 3.0.0.rc11"
+
+gem 'annotate' # show DB attrs

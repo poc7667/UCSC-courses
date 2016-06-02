@@ -1,0 +1,29 @@
+<div id="page_content">
+    <div id="page_heading">
+        <h1>{{product.name}} {{product.price | currency }} {{product.location | json}} </h1>
+        <!-- <span class="uk-text-muted uk-text-upper uk-text-small"> </span> -->
+    </div>
+    <div id="page_content_inner">
+        <div class="uk-grid uk-grid-medium" data-uk-grid-margin>
+            <div class="uk-width-xLarge-12-12  uk-width-large-12-12">
+                <div class="md-card">
+                    <div class="md-card-content large-padding">
+                        <div class="uk-grid uk-grid-divider uk-grid-medium">
+                            <div class="uk-width-large-2-2">
+                                <p>
+                                    <span class="uk-text-muted uk-text-small uk-display-block uk-margin-small-bottom">Tags</span>
+                                    <span class="uk-badge uk-margin-small-right" ng-class="{'uk-badge-success': $index != 1, 'uk-badge-primary': $index == 1}" ng-repeat="tag in product.tags">{{tag}}</span>
+                                </p>
+                                <hr class="uk-grid-divider">
+                                <p>
+                                    <span class="uk-text-muted uk-text-small uk-display-block uk-margin-small-bottom">{{I18n.t("description")}}</span>
+                                    <p ng-bind-html="product.description | unsafe"></p>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

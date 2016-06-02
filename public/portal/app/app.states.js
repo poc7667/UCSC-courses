@@ -6,8 +6,8 @@ altairApp
 
             // Use $urlRouterProvider to configure any redirects (when) and invalid urls (otherwise).
             $urlRouterProvider
-                .when('/dashboard', '/')
-                .otherwise('/products/index');
+                .when('/dashboard', '/pages/scrum_board')
+                .otherwise('/pages/scrum_board');
 
             $stateProvider
             // -- LOGIN PAGE --
@@ -34,10 +34,6 @@ altairApp
                             templateUrl: 'app/shared/header/headerView.html',
                             controller: 'main_headerCtrl'
                         },
-                        // 'main_sidebar': {
-                        //     templateUrl: 'app/shared/main_sidebar/main_sidebarView.html',
-                        //     controller: 'main_sidebarCtrl'
-                        // },
                         '': {
                             templateUrl: 'app/views/restricted.html'
                         }

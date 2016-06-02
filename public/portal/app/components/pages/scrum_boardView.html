@@ -1,6 +1,18 @@
 
     <div id="page_content" class="uk-height-1-1">
 
+        <div class="md-card">
+            <div class="md-card-content">
+                <h3 class="heading_a">Choose course</h3>
+                <div class="uk-grid" data-uk-grid-margin>
+                    <div class="uk-width-large-1-2">
+                        <selectize id="selec_adv_1" config="selectize_planets_config" options="selectize_planets_options" position="bottom" ng-model="forms_advanced.selectize_planets"></selectize>
+                    </div>
+                    {{forms_advanced.selectize_planets}}
+                </div>
+            </div>
+        </div>
+
         <div class="scrum_board_overflow">
             <div id="scrum_board" class="uk-clearfix">
 
@@ -23,57 +35,7 @@
 
     </div>
 
-    <div class="md-fab-wrapper">
-        <a class="md-fab md-fab-accent" href="#new_task" data-uk-modal="{ center:true, bgclose:false }">
-            <i class="material-icons">&#xE145;</i>
-        </a>
-    </div>
 
-    <div class="uk-modal" id="new_task">
-        <div class="uk-modal-dialog">
-            <div class="uk-modal-header">
-                <h3 class="uk-modal-title">{{ newTask.name }}</h3>
-            </div>
-            <form class="uk-form-stacked">
-                <div class="uk-margin-medium-bottom">
-                    <label for="task_title">Title</label>
-                    <input type="text" class="md-input" id="Task_title" name="snippet_title" ng-model="newTask.title" md-input/>
-                </div>
-                <div class="uk-margin-medium-bottom">
-                    <label for="task_description">Description</label>
-                    <textarea class="md-input" id="task_description" name="task_description" ng-model="newTask.description" md-input></textarea>
-                </div>
-                <div class="uk-margin-medium-bottom">
-                    <label for="task_assignee" class="uk-form-label">Assignee</label>
-                    <input config="newTask_assignee_config" options="newTask_assignee" ng-model="newTask.assignee" id="task_assignee" name="task_assignee" selectize />
-                </div>
-                <div class="uk-margin-medium-bottom">
-                    <label for="task_group" class="uk-form-label">Group</label>
-                    <input config="newTask_group_config" options="newTask_group" ng-model="newTask.group" id="task_group" name="task_group" selectize />
-                </div>
-                <div class="uk-margin-medium-bottom">
-                    <label class="uk-form-label">Priority</label>
-                    <div>
-                        <span class="icheck-inline">
-                            <input type="radio" name="task_priority" id="task_priority_minor" ng-model="newTask.priority" value="minor" icheck />
-                            <label for="task_priority_minor" class="inline-label uk-badge uk-badge-success">MINOR</label>
-                        </span>
-                        <span class="icheck-inline">
-                            <input type="radio" name="task_priority" id="task_priority_critical" ng-model="newTask.priority" value="critical" icheck />
-                            <label for="task_priority_critical" class="inline-label uk-badge uk-badge-warning">CRITICAL</label>
-                        </span>
-                        <span class="icheck-inline">
-                            <input type="radio" name="task_priority" id="task_priority_blocker" ng-model="newTask.priority" value="blocker" icheck />
-                            <label for="task_priority_blocker" class="inline-label uk-badge uk-badge-danger">BLOCKER</label>
-                        </span>
-                    </div>
-                </div>
-                <div class="uk-modal-footer uk-text-right">
-                    <button type="button" class="md-btn md-btn-flat uk-modal-close">Close</button><button type="button" class="md-btn md-btn-flat md-btn-flat-primary" id="snippet_new_save">Add Task</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <div class="uk-modal" id="task_info">
         <div class="uk-modal-dialog">

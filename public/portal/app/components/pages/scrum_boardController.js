@@ -7,6 +7,40 @@ angular
         'dragulaService',
         function ($rootScope,$scope,tasks_list,dragulaService) {
 
+            var planets_data = $scope.selectize_planets_options = [
+                {id: 1, title: 'Mercury', url: 'http://en.wikipedia.org/wiki/Mercury_(planet)'},
+                {id: 2, title: 'Venus', url: 'http://en.wikipedia.org/wiki/Venus'},
+                {id: 3, title: 'Earth', url: 'http://en.wikipedia.org/wiki/Earth'},
+                {id: 4, title: 'Mars', url: 'http://en.wikipedia.org/wiki/Mars'},
+                {id: 5, title: 'Jupiter', url: 'http://en.wikipedia.org/wiki/Jupiter'},
+                {id: 6, title: 'Saturn', url: 'http://en.wikipedia.org/wiki/Saturn'},
+                {id: 7, title: 'Uranus', url: 'http://en.wikipedia.org/wiki/Uranus'},
+                {id: 8, title: 'Neptune', url: 'http://en.wikipedia.org/wiki/Neptune'}
+            ];
+
+            $scope.selectize_planets_config = {
+                plugins: {
+                    'remove_button': {
+                        label     : ''
+                    }
+                },
+                maxItems: null,
+                valueField: 'id',
+                labelField: 'title',
+                searchField: 'title',
+                create: false,
+                render: {
+                    option: function(planets_data, escape) {
+                        return  '<div class="option">' +
+                            '<span class="title">' + escape(planets_data.title) + '</span>' +
+                            '</div>';
+                    },
+                    item: function(planets_data, escape) {
+                        return '<div class="item"><a href="' + escape(planets_data.url) + '" target="_blank">' + escape(planets_data.title) + '</a></div>';
+                    }
+                }
+            };
+
             $rootScope.page_full_height = true;
 
             $scope.task_groups = [

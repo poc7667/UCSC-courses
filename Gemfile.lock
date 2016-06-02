@@ -9,6 +9,14 @@ GIT
     elasticsearch-rails (0.1.9)
 
 GIT
+  remote: https://github.com/poc7667/jbuilder.git
+  revision: 68b32c9cc80fc0ef31010d9292aebfd27d35fbbd
+  specs:
+    jbuilder (2.4.1)
+      activesupport (>= 3.0.0, < 5.1)
+      multi_json (~> 1.2)
+
+GIT
   remote: https://github.com/thoughtbot/paperclip
   revision: 523bd46c768226893f23889079a7aa9c73b57d68
   ref: 523bd46c768226893f23889079a7aa9c73b57d68
@@ -216,9 +224,6 @@ GEM
     i18n (0.7.0)
     i18n-js (3.0.0.rc12)
       i18n (~> 0.6, >= 0.6.6)
-    jbuilder (2.5.0)
-      activesupport (>= 3.0.0, < 5.1)
-      multi_json (~> 1.2)
     jmespath (1.2.4)
       json_pure (>= 1.8.1)
     jquery-rails (4.1.1)
@@ -456,7 +461,7 @@ DEPENDENCIES
   guard-rspec
   hirb-unicode
   i18n-js (>= 3.0.0.rc11)
-  jbuilder (~> 2.0)
+  jbuilder!
   jquery-rails
   launchy
   nokogiri (= 1.6.7.2)

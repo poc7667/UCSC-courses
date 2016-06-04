@@ -102,7 +102,6 @@ altairApp.run(function($rootScope, $state, $auth, $location, $window) {
 
     $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams) {
         $auth.validateUser().then(function(resp) {
-            console.log(resp);
             $rootScope.userProfile = resp;
         }).catch(function(resp) {
             // debugger

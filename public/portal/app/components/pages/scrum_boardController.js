@@ -16,20 +16,18 @@ angular
                 id: 'todo',
                 name: 'To Do'
             }, {
-                id: 'inAnalysis',
-                name: 'In analysis'
+                id: 'quarter_1',
+                name: '#1 Quarter'
             }, {
-                id: 'inProgress',
-                name: 'In progress'
+                id: 'quarter_2',
+                name: '#2 Quarter'
             }, {
-                id: 'done',
-                name: 'Done'
+                id: 'quarter_3',
+                name: '#3 Quarter'
             }];
 
             $scope.selected_courses = [];
             $scope.tasks_list = $scope.selected_courses;
-
-            // $scope.tasks_list = tasks_list;
 
             // task info
             $scope.taskInfo = function(task) {

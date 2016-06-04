@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160604030153) do
+ActiveRecord::Schema.define(version: 20160604031911) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -62,6 +62,15 @@ ActiveRecord::Schema.define(version: 20160604030153) do
 
   add_index "products", ["product_source_id"], name: "index_products_on_product_source_id", using: :btree
 
+  create_table "user_courses", force: :cascade do |t|
+    t.integer  "user_id"
+    t.json     "plan"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "user_courses", ["user_id"], name: "index_user_courses_on_user_id", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "provider",               default: "email", null: false
     t.string   "uid",                    default: "",      null: false
@@ -92,4 +101,5 @@ ActiveRecord::Schema.define(version: 20160604030153) do
   add_index "users", ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true, using: :btree
 
   add_foreign_key "products", "product_sources"
+  add_foreign_key "user_courses", "users"
 end

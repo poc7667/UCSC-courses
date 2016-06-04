@@ -1,117 +1,139 @@
 angular
-    .module('altairApp', [ angularDragula(angular) ] )
+    .module('altairApp', [angularDragula(angular)])
     .controller('scrum_boardCtrl', [
         '$rootScope',
         '$scope',
         'tasks_list',
+        '$http',
         'dragulaService',
-        function ($rootScope,$scope,tasks_list,dragulaService) {
+        function($rootScope, $scope, tasks_list, $http, dragulaService) {
 
-            var planets_data = $scope.selectize_planets_options = [
-                {id: 1, title: 'Mercury', url: 'http://en.wikipedia.org/wiki/Mercury_(planet)'},
-                {id: 2, title: 'Venus', url: 'http://en.wikipedia.org/wiki/Venus'},
-                {id: 3, title: 'Earth', url: 'http://en.wikipedia.org/wiki/Earth'},
-                {id: 4, title: 'Mars', url: 'http://en.wikipedia.org/wiki/Mars'},
-                {id: 5, title: 'Jupiter', url: 'http://en.wikipedia.org/wiki/Jupiter'},
-                {id: 6, title: 'Saturn', url: 'http://en.wikipedia.org/wiki/Saturn'},
-                {id: 7, title: 'Uranus', url: 'http://en.wikipedia.org/wiki/Uranus'},
-                {id: 8, title: 'Neptune', url: 'http://en.wikipedia.org/wiki/Neptune'}
-            ];
-
-            $scope.selectize_planets_config = {
-                plugins: {
-                    'remove_button': {
-                        label     : ''
-                    }
-                },
-                maxItems: null,
-                valueField: 'id',
-                labelField: 'title',
-                searchField: 'title',
-                create: false,
-                render: {
-                    option: function(planets_data, escape) {
-                        return  '<div class="option">' +
-                            '<span class="title">' + escape(planets_data.title) + '</span>' +
-                            '</div>';
-                    },
-                    item: function(planets_data, escape) {
-                        return '<div class="item"><a href="' + escape(planets_data.url) + '" target="_blank">' + escape(planets_data.title) + '</a></div>';
-                    }
-                }
-            };
+            loadCourses($scope);
 
             $rootScope.page_full_height = true;
 
-            $scope.task_groups = [
-                {
-                    id: 'todo',
-                    name: 'To Do'
-                },
-                {
-                    id: 'inAnalysis',
-                    name: 'In analysis'
-                },
-                {
-                    id: 'inProgress',
-                    name: 'In progress'
-                },
-                {
-                    id: 'done',
-                    name: 'Done'
-                }
-            ];
+            $scope.task_groups = [{
+                id: 'todo',
+                name: 'To Do'
+            }, {
+                id: 'quarter_1',
+                name: '#1 Quarter'
+            }, {
+                id: 'quarter_2',
+                name: '#2 Quarter'
+            }, {
+                id: 'quarter_3',
+                name: '#3 Quarter'
+            }];
 
-            $scope.tasks_list = tasks_list;
+            $scope.selected_courses = [];
+            $scope.tasks_list = $scope.selected_courses;
 
             // task info
             $scope.taskInfo = function(task) {
                 $scope.info = {
-                    name: task.name,
+                    name: task.course_name,
                     title: task.title,
                     status: task.status,
                     description: task.description,
-                    assignee: task.assignee
+                    credit_hours: task.credit_hours
                 }
             };
 
-            // new task
-            $scope.newTask = {
-                name: 'Altair-245',
-                assignee: [
-                    { id: 1, title: 'Aleen Grant' },
-                    { id: 2, title: 'Tyrese Koss' },
-                    { id: 3, title: 'Chasity Green' },
-                    { id: 4, title: 'Me' }
-                ],
-                group: [
-                    { name: 'todo', title: 'To Do' },
-                    { name: 'inAnalysis', title: 'In Analysis' },
-                    { name: 'inProgress', title: 'In Progress' },
-                    { name: 'done', title: 'Done' }
-                ]
-            };
+            $scope.$watchCollection(
+                "forms_advanced.selectize_planets",
+                function( newValues, oldValues ) {
+                    oldValues = oldValues || []
+                    newValues = newValues || []
+                    if (newValues.length > oldValues.length){
+                        // $scope.tasks_list = [];
+                        _.each(newValues,function(id){
+                            var course = _.find($scope.selectize_planets_options, function(course) {
+                                return course.id == id;
+                            });
+                            var isExist = _.find($scope.tasks_list, function(task) {
+                                return task.id == course.id;
+                            });
+                            console.log(isExist)
+                            if(undefined == isExist){
+                                $scope.tasks_list.push(course);
+                            }
+                        })
+                        console.log($scope.task_list);
 
-            $scope.newTask_assignee =  $scope.newTask.assignee;
-            $scope.newTask_assignee_config = {
-                create:false,
-                maxItems: 1,
-                valueField: 'id',
-                labelField: 'title',
-                placeholder: 'Select Assignee...'
-            };
-            $scope.newTask_group =  $scope.newTask.group;
-            $scope.newTask_group_config =  {
-                create:false,
-                maxItems: 1,
-                valueField: 'name',
-                labelField: 'title',
-                placeholder: 'Select Group...'
-            };
+                    }else{
+                        var taskID = _.difference(oldValues, newValues);
+                        for(var i = $scope.tasks_list.length - 1; i >= 0; i--){
+                            if($scope.tasks_list[i].id == taskID){
+                                $scope.tasks_list.splice(i,1);
+                            }
+                        }
+                    }
 
-            $scope.$on('tasks.drop', function (e, el, target, source) {
+                }
+            );
+
+            $scope.$on('tasks.drop', function(e, el, target, source) {
+                var groupId = target[0].id;
+                var taskHTML = (el[0].innerHTML);
+                var taskNode = angular.element(taskHTML);
+                var taskId = taskNode.find("#task_id").val();
+                var foundTask = _.find($scope.tasks_list, function(task){
+                    return task.id == taskId;
+                })
+                console.log($scope.tasks_list);
+                foundTask.group = groupId;
                 console.log(target[0].id);
             });
+
+            function loadCourses() {
+                var planets_data = $scope.selectize_planets_options = [];
+                $http({
+                    method: 'GET',
+                    url: '/api/v1/courses.json'
+                }).then(function(data) {
+                    _.each(data.data, function(item) {
+                        item.group = "todo"
+                        $scope.selectize_planets_options.push(item)
+                    })
+                });
+
+
+
+                $scope.selectize_planets_config = {
+                    plugins: {
+                        'remove_button': {
+                            label: ''
+                        }
+                    },
+                    maxItems: null,
+                    valueField: 'id',
+                    labelField: 'course_name',
+                    searchField: 'course_name',
+                    create: false,
+                    render: {
+                        option: function(item, escape) {
+                            var str = "{{course}}, {{start_date}} - {{credit_hours}} credits {{location}} : {{course_number}}"
+                            var values = {
+                                course: item.course_name,
+                                start_date: moment(item.start_date).format("YYYY/MM/DD ddd").toString(),
+                                credit_hours: item.credit_hours,
+                                location: item.site_name,
+                                course_number: item.course_number,
+                            }
+
+                            var option_item = S(str).template(values).s
+
+                            return '<div class="option">' +
+                                '<span class="title">' + option_item + '</span>' +
+                                '</div>';
+                        },
+                        item: function(planets_data, escape) {
+                            return '<div class="item"><a href="' + escape(planets_data.url) + '" target="_blank">'+ escape(planets_data.course_number) + ":" + escape(planets_data.course_name) + '</a></div>';
+                        }
+                    }
+                };
+            }
 
         }
     ]);

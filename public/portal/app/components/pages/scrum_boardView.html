@@ -35,7 +35,7 @@ font {10px;}
                     <tr ng-repeat="course in tasks_list| filter:{group:quarter_name}">
                         <td>{{course.course_number}}</td>
                         <td>{{course.course_name}}</td>
-                        <td>{{course.start_date| date:'MM/dd HH:mm'}}~{{course.end_date| date:'MM/dd HH:mm'}}</td>
+                        <td>{{course.start_date| date:'MM/dd'}} ~ {{course.end_date| date:'MM/dd'}}</td>
                         <td>{{course.start_date| date:'EEEE'}}</td>
                         <td>{{course.site_name}}</td>
                         <td>{{course.credit_hours}}</td>
@@ -44,10 +44,21 @@ font {10px;}
             </table>
         </div>
     </div>
-    <div class="uk-width-medium-4-10" ng-show="messages.length > 0">
+    <div class="uk-width-medium-4-10" >
+        <h3 class="heading_b">Statistics</h3>
         <div class="md-card">
-            <div class="md-card-content">
-                <p ng-repeat="msg in messages">{{msg}}</p>
+            <div class="md-card-content" >
+                <div ng-show="suggestions.length > 0">
+                        <p ng-repeat="msg in suggestions">{{msg}}</p>
+                    </div>
+            </div>
+        </div>
+        <h3 class="heading_b">Suggestions</h3>
+        <div class="md-card">
+            <div class="md-card-content" >
+                <div ng-show="messages.length > 0">
+                    <p ng-repeat="msg in messages">{{msg}}</p>
+                </div>
             </div>
         </div>
     </div>

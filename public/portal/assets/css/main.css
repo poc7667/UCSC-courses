@@ -11166,8 +11166,8 @@ a.waves-effect .waves-ripple {
 }
 .scrum_task {
   background: #fff;
-  padding: 8px 8px 8px 12px;
-  border-left-width: 4px;
+  /*padding: 8px 8px 8px 12px;*/
+  border-left-width: 2px;
   border-left-style: solid;
 }
 .scrum_task.blocker {

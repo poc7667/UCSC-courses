@@ -11,18 +11,19 @@ angular
             loadCourses($scope);
 
             $rootScope.page_full_height = true;
+            $scope.statistics = {};
             $scope.messages = [];
             $scope.quarters = ["quarter_1", "quarter_2", "quarter_3"];
 
             $scope.courseQuarters = [{
                 id: 'quarter_1',
-                name: '#1 Quarter'
+                name: 'Quarter 1'
             }, {
                 id: 'quarter_2',
-                name: '#2 Quarter'
+                name: 'Quarter 2'
             }, {
                 id: 'quarter_3',
-                name: '#3 Quarter'
+                name: 'Quarter 3'
             }]
 
             var todo_task_groups = [{
@@ -31,11 +32,6 @@ angular
             }]
 
             $scope.task_groups = todo_task_groups.concat($scope.courseQuarters)
-
-            // angular.extend($scope.task_groups, angular.copy($scope.courseQuarters))
-
-            // console.log($scope.task_groups)
-
             $scope.selected_courses = [];
             $scope.tasks_list = $scope.selected_courses;
 
@@ -63,12 +59,10 @@ angular
                             var isExist = _.find($scope.tasks_list, function(task) {
                                 return task.id == course.id;
                             });
-                            // console.log(isExist)
                             if (undefined == isExist) {
                                 $scope.tasks_list.push(course);
                             }
                         })
-                        // console.log($scope.task_list);
 
                     } else {
                         var taskID = _.difference(oldValues, newValues);
@@ -117,8 +111,9 @@ angular
 
             function startCheckConstraintsProcess(tasks){
                 $scope.messages = [];
-                checkONLINECourseShouldAtMostOnceInQuarter(tasks)
-                checkLastQuarterShouldAtLeastOnePhysicalClasses(tasks)
+                checkONLINECourseShouldAtMostOnceInQuarter(tasks);
+                checkLastQuarterShouldAtLeastOnePhysicalClasses(tasks);
+                isMultipleCoursersOnTheSameDayOfWeek(tasks);
             }
 
             function checkONLINECourseShouldAtMostOnceInQuarter(tasks) {
@@ -133,6 +128,14 @@ angular
                 })
             }
 
+            function updateCoursePlanStatistics(tasks){
+                $scope.statistics
+                var quarter_tasks = getQuarterTasks(tasks);
+
+                // _.each(quarter_tasks, function())
+
+            }
+
             function checkLastQuarterShouldAtLeastOnePhysicalClasses(tasks){
                 var quarter_tasks = getQuarterTasks(tasks);
                 var count = _.countBy(quarter_tasks["quarter_3"], function(task) {
@@ -142,8 +145,19 @@ angular
                 if (count.INCLASS == undefined){
                     $scope.messages.push("quarter_3"+": should at least one course in classroom")
                 }
+            }
 
-
+            function isMultipleCoursersOnTheSameDayOfWeek(tasks){
+                var inClassTasks = []
+                _.each(getQuarterTasks(tasks),function(coursesInAQuarter, quarter_name){
+                    var filteredCourses = _.filter(coursesInAQuarter, function(t){return t.site_name!="ONLINE"})
+                    var dayOfWeekFreq = _.groupBy(filteredCourses,function(t){return moment(t.start_date).format('dddd')})
+                    _.each(dayOfWeekFreq, function(values, dayOfWeek){
+                        if(values.length > 1){
+                            $scope.messages.push(quarter_name+ ": There are multiple courses on the same day :"+ dayOfWeek)
+                        }
+                    })
+                })
             }
 
             function getQuarterTasks(tasks){

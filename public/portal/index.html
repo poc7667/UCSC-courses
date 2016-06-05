@@ -18,7 +18,27 @@
         <script src="/node_modules/string/dist/string.min.js"></script>
         <script src="/node_modules/underscore/underscore-min.js"></script>
         <script src="/javascripts/backbone-min.js"></script>
-
+    <script>
+    var pp = (function(){
+    var MAX_DEPTH = 100;
+    return function(item, depth){
+    depth = depth || 0;
+    if (depth > MAX_DEPTH ) {
+    console.log(item);
+    return;
+    }
+    if (_.isObject(item)) {
+    _.each(item, function(value, key) {
+    console.group(key + ' : ' +(typeof value));
+    pp(value, depth + 1);
+    console.groupEnd();
+    });
+    } else {
+    console.log(item);
+    }
+    }
+    })();
+    </script>
         
         <!-- JS -->
         <!-- common functions -->

@@ -1,9 +1,10 @@
 <header id="header_main" ng-controller="main_headerCtrl">
     <div class="header_main_content">
         <nav class="uk-navbar">
-            <!-- <a href="#">HOME</a> -->
-            <a ng-click="facebookRegisteration()">Login</a> to remember your plan
+            <div class="uk-width-medium-2-5">
+            <a  ng-hide="userProfile.email" class="md-btn md-btn-facebook md-btn-block md-btn-icon course_plan" ng-click="facebookRegisteration()"><i class="uk-icon-facebook"></i>Sign in to remember course plans</a>
+            <a ng-show="userProfile.email"> Hi {{userProfile.name}}</a>
+            </div>
         </div>
-
-        </nav>
-    </header>
+    </nav>
+</header>

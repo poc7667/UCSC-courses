@@ -23,4 +23,5 @@
 #
 
 class Course < ActiveRecord::Base
+  validates :course_number, uniqueness: {scope: [:course_number, :start_date]}
 end

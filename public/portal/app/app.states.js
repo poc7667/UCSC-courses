@@ -1195,6 +1195,7 @@ altairApp
                         deps: ['$ocLazyLoad', function($ocLazyLoad) {
                             return $ocLazyLoad.load([
                                 'lazy_dragula',
+                                'app/js/services/user_course_service.js',
                                 'app/components/pages/scrum_boardController.js'
                             ],{serie: true});
                         }],

@@ -1,0 +1,73 @@
+<!-- ng-controller="userCourseBaseCtrl" -->
+<div ng-controller="userCourseIndexCtrl">
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n font-thin h3"> {{I18n.t("userCourse")}} </h1>
+    </div>
+    <div ui-view class="wrapper-md" >
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <table class="table table-bordered table-hover table-condensed">
+                    <tr style="font-weight: bold">
+                        <td ng-repeat=" field in user_course_pre_non_editable_fields ">
+                            {{I18n.t(field)}}
+                        </td>
+                        <td ng-repeat=" field in user_course_text_fields ">
+                            {{I18n.t(field)}}
+                        </td>
+                        <td ng-repeat=" field in user_course_datetime_text_fields ">
+                            {{I18n.t(field)}}
+                        </td>
+
+                        <td ng-repeat=" field in user_course_select_fields ">
+                            {{I18n.t(field)}}
+                        </td>
+                        <td ng-repeat=" field in user_course_post_non_editable_fields ">
+                            {{I18n.t(field)}}
+                        </td>
+                        <td>{{I18n.t("operation")}}</td>
+                    </tr>
+                    <tr ng-repeat=" user_course in user_courses ">
+                        <td ng-repeat=" field in user_course_pre_non_editable_fields ">
+                            {{ user_course[field] }}
+                        </td>
+                        <td ng-repeat=" field in user_course_text_fields ">
+                            <span editable-text="user_course.{{field}}" e-name="{{field}}" e-form="rowform"  e-required>
+                                {{ user_course[field] || 'empty'}}
+                            </span>
+                        </td>
+                        <td ng-repeat=" field in user_course_datetime_text_fields ">
+                            <span editable-text="user_course.{{field}}" e-name="{{field}}" e-form="rowform"  e-required>
+                                {{ user_course[field] | date:'yyyy-MM-dd HH:mm':'UTC'}}
+                            </span>
+                        </td>
+                        <td ng-repeat=" field in user_course_select_fields ">
+                            <span editable-select="user_course.{{field}}" e-name="{{field}}" e-form="rowform" e-ng-options="s.value as s.text for s in {{field}}_options"  data-e-style="min-width:75px;">
+                              {{ ( $eval(field+"_options") | filter:{value:  $eval("user_course."+field)})[0].text || $eval("user_course."+field) }}
+                            </span>
+                        </td>
+                        <td ng-repeat=" field in user_course_post_non_editable_fields ">
+                            {{ user_course[field] }}
+                        </td>
+
+                        <td nowrap="true">
+                            <form editable-form="" name="rowform" onbeforesave="inPlaceUpdate($data, user_course.id)" ng-show="rowform.$visible" class="form-buttons form-inline ng-pristine ng-valid ng-hide" shown="inserted == user_course" aria-hidden="true">
+                                <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-sm btn-info" aria-disabled="false">
+                                {{I18n.t("save")}}
+                                </button>
+                                <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-sm btn-default" aria-disabled="false">
+                                {{I18n.t("cancel")}}
+                                </button>
+                            </form>
+                            <div class="buttons" ng-show="!rowform.$visible" aria-hidden="false">
+                                <button class="btn btn-sm btn-info" ng-click="rowform.$show()">{{I18n.t("edit")}}</button>
+                                <button class="btn btn-sm btn-danger" ng-click="delete($index, user_course.id)" ng-controller="userCourseDeleteCtrl"><i class="fa fa-minus"></i> {{I18n.t("delete")}}</button>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

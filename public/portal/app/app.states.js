@@ -1206,7 +1206,7 @@ altairApp
                         }
                     },
                     data: {
-                        pageTitle: 'Scrum Board'
+                        pageTitle: 'Course Plan'
                     }
                 })
                 .state("restricted.pages.search_results", {

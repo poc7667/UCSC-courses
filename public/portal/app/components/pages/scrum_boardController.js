@@ -107,8 +107,7 @@ angular
                     return task.id == taskId;
                 })
                 foundTask.group = groupId;
-
-                checkONLINECourseShouldAtMostOnceInQuarter(tasks)
+                startCheckConstraintsProcess(tasks)
 
                 setTimeout(function() {
                     $scope.$apply();
@@ -116,11 +115,17 @@ angular
 
             });
 
+            function startCheckConstraintsProcess(tasks){
+                $scope.messages = [];
+                checkONLINECourseShouldAtMostOnceInQuarter(tasks)
+                checkLastQuarterShouldAtLeastOnePhysicalClasses(tasks)
+            }
+
             function checkONLINECourseShouldAtMostOnceInQuarter(tasks) {
-                var quarter_tasks = getFirstTwoQuarterTasks(tasks);
+                var quarter_tasks = getQuarterTasks(tasks);
                 _.each(["quarter_1", "quarter_2"], function(quarter_name){
                     var count = _.countBy(quarter_tasks[quarter_name], function(task) {
-                        return task.site_name == "ONLINE" ? 'ONLINE': 'IN';
+                        return task.site_name == "ONLINE" ? 'ONLINE': 'INCLASS';
                     });
                     if (count.ONLINE > 1){
                         $scope.messages.push(quarter_name+": ONLINE course > 1")
@@ -128,12 +133,24 @@ angular
                 })
             }
 
-            function getFirstTwoQuarterTasks(tasks){
+            function checkLastQuarterShouldAtLeastOnePhysicalClasses(tasks){
+                var quarter_tasks = getQuarterTasks(tasks);
+                var count = _.countBy(quarter_tasks["quarter_3"], function(task) {
+                    return task.site_name == "ONLINE" ? 'ONLINE': 'INCLASS';
+                });
+                console.log(count)
+                if (count.INCLASS == undefined){
+                    $scope.messages.push("quarter_3"+": should at least one course in classroom")
+                }
+
+
+            }
+
+            function getQuarterTasks(tasks){
                 var groups = _.groupBy(tasks, function(task) {
                     return task.group;
                 });
                 delete groups.todo;
-                delete groups.quarter_3;
                 return groups
             }
 

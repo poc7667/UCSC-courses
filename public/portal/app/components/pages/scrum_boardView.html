@@ -1,67 +1,104 @@
-    <div id="page_content" class="uk-height-1-1">
-        {{userProfile}}
+<style type="text/css">
+font {10px;}
+</style>
+<div id="page_content" class="uk-height-1-1">
+    <!-- {{userProfile}} -->
+    <div class="md-card">
+        <div class="md-card-content">
+            <h3 class="heading_a">Choose course</h3>
+            <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-large-2-2">
+                <selectize id="selec_adv_1" config="selectize_planets_config" options="selectize_planets_options" position="bottom" ng-model="forms_advanced.selectize_planets"></selectize>
+            </div>
+            <!-- {{forms_advanced.selectize_planets}} -->
+            <!-- {{tasks_list}} -->
+        </div>
+    </div>
+</div>
+<div class="uk-grid">
+
+        <div class="uk-width-medium-6-10 uk-row-first">
+            <div ng-repeat="quarter_name in quarters">
+            <table class="uk-table course_plan" >
+                <caption>  Quarter {{$index+1}} Credits: {{creditsInQuarter(quarter_name)}}</caption>
+                <thead>
+                    <tr>
+                        <th> #</th>
+                        <th>Name</th>
+                        <th>Duration</th>
+                        <th>Day of week</th>
+                        <th>Location</th>
+                        <th>Units</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="course in tasks_list| filter:{group:quarter_name}">
+                        <td>{{course.course_number}}</td>
+                        <td>{{course.course_name}}</td>
+                        <td>{{course.start_date| date:'MM/dd HH:mm'}}~{{course.end_date| date:'MM/dd HH:mm'}}</td>
+                        <td>{{course.start_date| date:'EEEE'}}</td>
+                        <td>{{course.site_name}}</td>
+                        <td>{{course.credit_hours}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="uk-width-medium-4-10" ng-show="messages.length > 0">
         <div class="md-card">
             <div class="md-card-content">
-                <h3 class="heading_a">Choose course</h3>
-                <div class="uk-grid" data-uk-grid-margin>
-                    <div class="uk-width-large-1-2">
-                        <selectize id="selec_adv_1" config="selectize_planets_config" options="selectize_planets_options" position="bottom" ng-model="forms_advanced.selectize_planets"></selectize>
-                    </div>
-                    {{forms_advanced.selectize_planets}}
-                    <!-- {{tasks_list}} -->
-                </div>
+                <p ng-repeat="msg in messages">{{msg}}</p>
             </div>
         </div>
-
-        <div class="scrum_board_overflow">
-            <div id="scrum_board" class="uk-clearfix">
-
-                <div ng-repeat="group in task_groups" >
-                    <div class="scrum_column_heading">{{ group.name }}</div>
-                    <div class="scrum_column">
-                        <div class="dragula dragula-vertical" dragula-scope="$parent" dragula='"tasks"' dragula-model='dragula_tasks' id="{{ group.id }}">
-                            <div ng-repeat="task in tasks_list | filter: { group: group.id }">
-                                <div class="scrum_task {{ task.status }}">
-                                    <h3 class="scrum_task_title"><a href="#task_info" data-uk-modal="{ center:true }" ng-click="taskInfo(task)">{{ task.course_name }}</a></h3>
-                                    <h4>Date {{ task.start_date | date:'MM/dd H:mm EEE'}}, Credits: {{task.credit_hours}}, Location: {{task.site_name}}</h4>
-                                    <input id="task_id" value="{{task.id}}" style="display: none;"></input>
-                                    <p class="scrum_task_description">{{ task.description }}</p>
-                                    <p class="scrum_task_info"><span class="uk-text-muted">#:</span> <a href="#">{{ task.course_number }}</a></p>
-                                </div>
-                            </div>
+    </div>
+    
+</div>
+<div class="scrum_board_overflow">
+    <div id="scrum_board" class="uk-clearfix">
+        <div ng-repeat="group in task_groups" >
+            <div class="scrum_column_heading">{{ group.name }}</div>
+            <div class="scrum_column">
+                <div class="dragula dragula-vertical" dragula-scope="$parent" dragula='"tasks"' dragula-model='dragula_tasks' id="{{ group.id }}">
+                    <div ng-repeat="task in tasks_list | filter: { group: group.id }">
+                        <div class="scrum_task {{ task.status }}">
+                            <!-- <h3 class="scrum_task_title"><a href="#task_info" data-uk-modal="{ center:true }" ng-click="taskInfo(task)">{{ task.course_name }}</a></h3> -->
+                            <p class="course_plan">{{ task.course_name}} </p>
+                            <p class="course_plan">{{ task.start_date | date:'MM/dd H:mm EEE'}} ({{task.site_name}}),units: {{task.credit_hours}}, {{ task.course_number }} </p>
+                            <input id="task_id" value="{{task.id}}" style="display: none;"></input>
+                            <!-- <p class="scrum_task_description">{{ task.description }}</p> -->
+                            <!-- <p class="scrum_task_info"><span class="uk-text-muted">#:</span> <a href="#">{{ task.course_number }}</a></p> -->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-
-
-    <div class="uk-modal" id="task_info">
-        <div class="uk-modal-dialog">
-            <div class="uk-modal-header">
-                <span class="uk-badge uk-badge-danger uk-float-right" ng-if="info.status == 'blocker'">BLOCKER</span>
-                <span class="uk-badge uk-badge-success uk-float-right" ng-if="info.status == 'minor'">MINOR</span>
-                <span class="uk-badge uk-badge-warning uk-float-right" ng-if="info.status == 'critical'">CRITICAL</span>
-                <h3 class="uk-modal-title">{{ info.name }}</h3>
-            </div>
-            <form class="uk-form-stacked">
-                <div class="uk-margin-medium-bottom">
-                    <p class="uk-margin-small-bottom uk-text-muted">Title</p>
-                    <p class="uk-margin-remove uk-text-large">{{ info.title }}</p>
-                </div>
-                <div class="uk-margin-medium-bottom">
-                    <p class="uk-margin-small-bottom uk-text-muted">Description</p>
-                    <p class="uk-margin-remove">{{ info.description }}</p>
-                </div>
-                <div class="uk-margin-medium-bottom">
-                    <p class="uk-margin-small-bottom uk-text-muted">Assignee</p>
-                    <p class="uk-margin-remove">{{ info.assignee }}</p>
-                </div>
-                <div class="uk-modal-footer uk-text-right">
-                    <button type="button" class="md-btn md-btn-flat uk-modal-close">Close</button>
-                </div>
-            </form>
-        </div>
+</div>
+</div>
+<div class="uk-modal" id="task_info">
+<div class="uk-modal-dialog">
+    <div class="uk-modal-header">
+        <span class="uk-badge uk-badge-danger uk-float-right" ng-if="info.status == 'blocker'">BLOCKER</span>
+        <span class="uk-badge uk-badge-success uk-float-right" ng-if="info.status == 'minor'">MINOR</span>
+        <span class="uk-badge uk-badge-warning uk-float-right" ng-if="info.status == 'critical'">CRITICAL</span>
+        <h3 class="uk-modal-title">{{ info.name }}</h3>
     </div>
+    <form class="uk-form-stacked">
+        <div class="uk-margin-medium-bottom">
+            <p class="uk-margin-small-bottom uk-text-muted">Title</p>
+            <p class="uk-margin-remove uk-text-large">{{ info.title }}</p>
+        </div>
+        <div class="uk-margin-medium-bottom">
+            <p class="uk-margin-small-bottom uk-text-muted">Description</p>
+            <p class="uk-margin-remove">{{ info.description }}</p>
+        </div>
+        <div class="uk-margin-medium-bottom">
+            <p class="uk-margin-small-bottom uk-text-muted">Assignee</p>
+            <p class="uk-margin-remove">{{ info.assignee }}</p>
+        </div>
+        <div class="uk-modal-footer uk-text-right">
+            <button type="button" class="md-btn md-btn-flat uk-modal-close">Close</button>
+        </div>
+    </form>
+</div>
+</div>

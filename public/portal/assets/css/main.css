@@ -12494,3 +12494,8 @@ body.pace-done > .page_preloader {
 .wizard > .content > .body pre[class*="language-"] {
   max-height: inherit;
 }
+
+.course_plan {
+  font-size: 12px;
+  background: white;
+}

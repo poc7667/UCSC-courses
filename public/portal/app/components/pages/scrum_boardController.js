@@ -12,6 +12,7 @@ angular
 
             $rootScope.page_full_height = true;
 
+            $scope.quarters = ["quarter_1", "quarter_2", "quarter_3"];
             $scope.task_groups = [{
                 id: 'todo',
                 name: 'To Do'
@@ -46,7 +47,6 @@ angular
                     oldValues = oldValues || []
                     newValues = newValues || []
                     if (newValues.length > oldValues.length){
-                        // $scope.tasks_list = [];
                         _.each(newValues,function(id){
                             var course = _.find($scope.selectize_planets_options, function(course) {
                                 return course.id == id;
@@ -73,6 +73,15 @@ angular
                 }
             );
 
+
+            $scope.creditsInQuarter = function(quarter_name){
+                var tasks = [];
+                _.each($scope.tasks_list, function(t){if(t.group == quarter_name){tasks.push(t)}})
+                var credit_hours = 0 ;
+                _.each(tasks,function(t){credit_hours += t.credit_hours;})
+                return credit_hours;
+            }
+
             $scope.$on('tasks.drop', function(e, el, target, source) {
                 var groupId = target[0].id;
                 var taskHTML = (el[0].innerHTML);
@@ -84,6 +93,11 @@ angular
                 console.log($scope.tasks_list);
                 foundTask.group = groupId;
                 console.log(target[0].id);
+
+                  setTimeout(function() {
+                    $scope.$apply(); 
+                  }, 200);
+
             });
 
             function loadCourses() {

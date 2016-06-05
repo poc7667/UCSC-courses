@@ -1,10 +1,11 @@
 class Api::V1::UserCoursesController < ApplicationController
   before_action :set_user_course, only: [:show, :edit, :update, :destroy]
+  before_action :set_user
 
   # GET /user_courses
   # GET /user_courses.json
   def index
-    @user_courses = UserCourse.all
+    @user_courses = []
   end
 
   # GET /user_courses/1
@@ -25,10 +26,10 @@ class Api::V1::UserCoursesController < ApplicationController
   # POST /user_courses.json
   def create
     @user_course = UserCourse.new(user_course_params)
-
+    @user.user_courses << @user_course
     respond_to do |format|
       if @user_course.save
-        format.json { render :show, status: :created %> }
+        format.json { render :show, status: :created }
       else
         format.json { render json: @user_course.errors, status: :unprocessable_entity }
       end
@@ -57,13 +58,21 @@ class Api::V1::UserCoursesController < ApplicationController
   end
 
   private
+
+    def set_user
+      @user=current_user
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_user_course
-      @user_course = UserCourse.find(params[:id])
+      @user_course = UserCourse.where(user_id: current_user.id).order(:created_at).last
     end
+
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_course_params
-      params.fetch(:user_course, {})
+      params.require(:user_course).permit(
+        :plan => [:id, :group, "$order"]
+      )
     end
 end

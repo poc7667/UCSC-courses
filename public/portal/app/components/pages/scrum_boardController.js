@@ -46,6 +46,15 @@ angular
                 }
             };
 
+            $scope.savePlan = function() {
+                console.log($scope.tasks_list)
+                userCourseService.create({}, {
+                    user_course: {
+                        plan: $scope.tasks_list
+                    }
+                })
+            }
+
             $scope.$watchCollection(
                 "forms_advanced.selectize_planets",
                 function(newValues, oldValues) {

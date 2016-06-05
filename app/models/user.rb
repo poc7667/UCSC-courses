@@ -39,4 +39,5 @@ class User < ActiveRecord::Base
           :recoverable, :rememberable, :trackable, :validatable,
           :confirmable, :omniauthable
   include DeviseTokenAuth::Concerns::User
+  has_many :user_courses
 end

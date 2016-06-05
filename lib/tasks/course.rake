@@ -6,7 +6,8 @@ end
 namespace :course do
 
   task :clear_all => :environment do
-    [:destroy_all, :reset_pk_sequence].each do |action|
+    # [:destroy_all, :reset_pk_sequence].each do |action|
+    [:destroy_all].each do |action|
       ["Course"].each do |model|
         model.constantize.send(action)
       end
@@ -23,7 +24,7 @@ namespace :course do
     end
   end
 
-  task :all => [:course]
+  task :all => [:clear_all, :course]
 end
 
 

@@ -11,12 +11,10 @@ angular
             loadCourses($scope);
 
             $rootScope.page_full_height = true;
-
+            $scope.messages = [];
             $scope.quarters = ["quarter_1", "quarter_2", "quarter_3"];
-            $scope.task_groups = [{
-                id: 'todo',
-                name: 'To Do'
-            }, {
+
+            $scope.courseQuarters = [{
                 id: 'quarter_1',
                 name: '#1 Quarter'
             }, {
@@ -25,7 +23,18 @@ angular
             }, {
                 id: 'quarter_3',
                 name: '#3 Quarter'
-            }];
+            }]
+
+            var todo_task_groups = [{
+                id: 'todo',
+                name: 'To Do'
+            }]
+
+            $scope.task_groups = todo_task_groups.concat($scope.courseQuarters)
+
+            // angular.extend($scope.task_groups, angular.copy($scope.courseQuarters))
+
+            // console.log($scope.task_groups)
 
             $scope.selected_courses = [];
             $scope.tasks_list = $scope.selected_courses;
@@ -54,12 +63,12 @@ angular
                             var isExist = _.find($scope.tasks_list, function(task) {
                                 return task.id == course.id;
                             });
-                            console.log(isExist)
+                            // console.log(isExist)
                             if (undefined == isExist) {
                                 $scope.tasks_list.push(course);
                             }
                         })
-                        console.log($scope.task_list);
+                        // console.log($scope.task_list);
 
                     } else {
                         var taskID = _.difference(oldValues, newValues);
@@ -89,20 +98,46 @@ angular
             }
 
             $scope.$on('tasks.drop', function(e, el, target, source) {
+                var tasks = $scope.tasks_list;
                 var groupId = target[0].id;
                 var taskHTML = (el[0].innerHTML);
                 var taskNode = angular.element(taskHTML);
                 var taskId = taskNode.find("#task_id").val();
-                var foundTask = _.find($scope.tasks_list, function(task) {
+                var foundTask = _.find(tasks, function(task) {
                     return task.id == taskId;
                 })
                 foundTask.group = groupId;
+
+                checkONLINECourseShouldAtMostOnceInQuarter(tasks)
 
                 setTimeout(function() {
                     $scope.$apply();
                 }, 200);
 
             });
+
+            function checkONLINECourseShouldAtMostOnceInQuarter(tasks) {
+                var quarter_tasks = getFirstTwoQuarterTasks(tasks);
+                _.each(["quarter_1", "quarter_2"], function(quarter_name){
+                    var count = _.countBy(quarter_tasks[quarter_name], function(task) {
+                        return task.site_name == "ONLINE" ? 'ONLINE': 'IN';
+                    });
+                    if (count.ONLINE > 1){
+                        $scope.messages.push(quarter_name+": ONLINE course > 1")
+                    }
+                })
+            }
+
+            function getFirstTwoQuarterTasks(tasks){
+                var groups = _.groupBy(tasks, function(task) {
+                    return task.group;
+                });
+                delete groups.todo;
+                delete groups.quarter_3;
+                return groups
+            }
+
+
 
             function loadCourses() {
                 var planets_data = $scope.selectize_planets_options = [];
@@ -115,8 +150,6 @@ angular
                         $scope.selectize_planets_options.push(item)
                     })
                 });
-
-
 
                 $scope.selectize_planets_config = {
                     plugins: {

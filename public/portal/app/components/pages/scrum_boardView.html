@@ -5,20 +5,20 @@ font {10px;}
     <!-- {{userProfile}} -->
     <div class="md-card">
         <div class="md-card-content">
-            <h3 class="heading_a">Choose course</h3>
+            <h4 class="heading_a"> </h4>
             <div class="uk-grid" data-uk-grid-margin>
                 <div class="uk-width-large-2-2">
-                <selectize id="selec_adv_1" config="selectize_planets_config" options="selectize_planets_options" position="bottom" ng-model="forms_advanced.selectize_planets"></selectize>
+                <selectize id="selec_adv_1" config="selectize_planets_config" placeholder="Choose course" options="selectize_planets_options" position="bottom" ng-model="forms_advanced.selectize_planets"></selectize>
             </div>
             <!-- {{forms_advanced.selectize_planets}} -->
             <!-- {{tasks_list}} -->
         </div>
     </div>
+
 </div>
 <div class="uk-grid">
-
-        <div class="uk-width-medium-6-10 uk-row-first">
-            <div ng-repeat="quarter_name in quarters">
+    <div class="uk-width-medium-6-10 uk-row-first">
+        <div ng-repeat="quarter_name in quarters">
             <table class="uk-table course_plan" >
                 <caption>  Quarter {{$index+1}} Credits: {{creditsInQuarter(quarter_name)}}</caption>
                 <thead>
@@ -49,8 +49,8 @@ font {10px;}
         <div class="md-card">
             <div class="md-card-content" >
                 <div ng-show="suggestions.length > 0">
-                        <p ng-repeat="msg in suggestions">{{msg}}</p>
-                    </div>
+                    <p ng-repeat="msg in suggestions">{{msg}}</p>
+                </div>
             </div>
         </div>
         <h3 class="heading_b">Suggestions</h3>
@@ -61,6 +61,13 @@ font {10px;}
                 </div>
             </div>
         </div>
+    <div >
+        <br>
+        <a href="#" class="md-btn md-btn-primary md-btn-small md-btn-wave-light md-btn-icon waves-effect waves-button waves-light">
+            <i class="uk-icon-map"></i>
+            Save courses plan
+        </a>
+    </div>
     </div>
     
 </div>
@@ -72,12 +79,9 @@ font {10px;}
                 <div class="dragula dragula-vertical" dragula-scope="$parent" dragula='"tasks"' dragula-model='dragula_tasks' id="{{ group.id }}">
                     <div ng-repeat="task in tasks_list | filter: { group: group.id }">
                         <div class="scrum_task {{ task.status }}">
-                            <!-- <h3 class="scrum_task_title"><a href="#task_info" data-uk-modal="{ center:true }" ng-click="taskInfo(task)">{{ task.course_name }}</a></h3> -->
                             <p class="course_plan">{{ task.course_name}} </p>
                             <p class="course_plan">{{ task.start_date | date:'MM/dd H:mm EEE'}} ({{task.site_name}}),units: {{task.credit_hours}}, {{ task.course_number }} </p>
                             <input id="task_id" value="{{task.id}}" style="display: none;"></input>
-                            <!-- <p class="scrum_task_description">{{ task.description }}</p> -->
-                            <!-- <p class="scrum_task_info"><span class="uk-text-muted">#:</span> <a href="#">{{ task.course_number }}</a></p> -->
                         </div>
                     </div>
                 </div>

@@ -104,20 +104,13 @@ altairApp.run(function($rootScope, $state, $auth, $location, $window) {
         $auth.validateUser().then(function(resp) {
             $rootScope.userProfile = resp;
         }).catch(function(resp) {
-            // debugger
-            // $state.transitionTo("access.signin");
             if ($location.$$path.indexOf("access") > -1) {
-                // noop
             } else {
             console.log(resp);
-
-                // $window.location.href = "access/signin";
                 event.preventDefault();
             }
         })
     });
-
-
 
 })
 
@@ -154,7 +147,7 @@ altairApp
                 $("html, body").animate({
                     scrollTop: 0
                 }, 200);
-            
+
                 $timeout(function() {
                     $rootScope.pageLoading = false;
                     // reinitialize uikit components

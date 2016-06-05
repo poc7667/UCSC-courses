@@ -43,11 +43,11 @@ angular
 
             $scope.$watchCollection(
                 "forms_advanced.selectize_planets",
-                function( newValues, oldValues ) {
+                function(newValues, oldValues) {
                     oldValues = oldValues || []
                     newValues = newValues || []
-                    if (newValues.length > oldValues.length){
-                        _.each(newValues,function(id){
+                    if (newValues.length > oldValues.length) {
+                        _.each(newValues, function(id) {
                             var course = _.find($scope.selectize_planets_options, function(course) {
                                 return course.id == id;
                             });
@@ -55,17 +55,17 @@ angular
                                 return task.id == course.id;
                             });
                             console.log(isExist)
-                            if(undefined == isExist){
+                            if (undefined == isExist) {
                                 $scope.tasks_list.push(course);
                             }
                         })
                         console.log($scope.task_list);
 
-                    }else{
+                    } else {
                         var taskID = _.difference(oldValues, newValues);
-                        for(var i = $scope.tasks_list.length - 1; i >= 0; i--){
-                            if($scope.tasks_list[i].id == taskID){
-                                $scope.tasks_list.splice(i,1);
+                        for (var i = $scope.tasks_list.length - 1; i >= 0; i--) {
+                            if ($scope.tasks_list[i].id == taskID) {
+                                $scope.tasks_list.splice(i, 1);
                             }
                         }
                     }
@@ -74,11 +74,17 @@ angular
             );
 
 
-            $scope.creditsInQuarter = function(quarter_name){
+            $scope.creditsInQuarter = function(quarter_name) {
                 var tasks = [];
-                _.each($scope.tasks_list, function(t){if(t.group == quarter_name){tasks.push(t)}})
-                var credit_hours = 0 ;
-                _.each(tasks,function(t){credit_hours += t.credit_hours;})
+                _.each($scope.tasks_list, function(t) {
+                    if (t.group == quarter_name) {
+                        tasks.push(t)
+                    }
+                })
+                var credit_hours = 0;
+                _.each(tasks, function(t) {
+                    credit_hours += t.credit_hours;
+                })
                 return credit_hours;
             }
 
@@ -87,16 +93,14 @@ angular
                 var taskHTML = (el[0].innerHTML);
                 var taskNode = angular.element(taskHTML);
                 var taskId = taskNode.find("#task_id").val();
-                var foundTask = _.find($scope.tasks_list, function(task){
+                var foundTask = _.find($scope.tasks_list, function(task) {
                     return task.id == taskId;
                 })
-                console.log($scope.tasks_list);
                 foundTask.group = groupId;
-                console.log(target[0].id);
 
-                  setTimeout(function() {
-                    $scope.$apply(); 
-                  }, 200);
+                setTimeout(function() {
+                    $scope.$apply();
+                }, 200);
 
             });
 
@@ -143,7 +147,7 @@ angular
                                 '</div>';
                         },
                         item: function(planets_data, escape) {
-                            return '<div class="item"><a href="' + escape(planets_data.url) + '" target="_blank">'+ escape(planets_data.course_number) + ":" + escape(planets_data.course_name) + '</a></div>';
+                            return '<div class="item"><a href="' + escape(planets_data.url) + '" target="_blank">' + escape(planets_data.course_number) + ":" + escape(planets_data.course_name) + '</a></div>';
                         }
                     }
                 };

@@ -10,8 +10,6 @@ font {10px;}
                 <div class="uk-width-large-2-2">
                 <selectize id="selec_adv_1" config="selectize_planets_config" placeholder="Choose course" options="selectize_planets_options" position="bottom" ng-model="forms_advanced.selectize_planets"></selectize>
             </div>
-            <!-- {{forms_advanced.selectize_planets}} -->
-            <!-- {{tasks_list}} -->
         </div>
     </div>
 
@@ -63,9 +61,9 @@ font {10px;}
         </div>
     <div >
         <br>
-        <a href="#" class="md-btn md-btn-primary md-btn-small md-btn-wave-light md-btn-icon waves-effect waves-button waves-light">
-            <i class="uk-icon-map"></i>
-            Save courses plan
+        <a ng-click="savePlan()" class="md-btn md-btn-primary md-btn-small md-btn-wave-light md-btn-icon waves-effect waves-button waves-light">
+            <i class="uk-icon-archive"></i>
+            Save Plan
         </a>
     </div>
     </div>

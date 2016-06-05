@@ -5,6 +5,7 @@
 
 var altairApp = angular.module('altairApp', [
     'ui.router',
+    'ngResource',
     'oc.lazyLoad',
     'ngSanitize',
     'ngRetina',
@@ -12,6 +13,7 @@ var altairApp = angular.module('altairApp', [
     'ConsoleLogger',
     'ngStorage',
     'ng-token-auth',
+    'userCourseModule',
 ]);
 
 

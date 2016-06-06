@@ -18,8 +18,6 @@ angular
         '$state',
         '$auth',
         function ($timeout,$scope,$window,$state, $auth) {
-            console.log("HIHIHI")
-
             $scope.facebookRegisteration = function() {
                 $auth.authenticate('facebook', {
                     params: {

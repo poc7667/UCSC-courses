@@ -1,12 +1,8 @@
 angular
     .module('altairApp', [angularDragula(angular)])
-    .controller('scrum_boardCtrl', [
-        '$rootScope',
-        '$scope',
-        'tasks_list',
-        '$http',
-        'dragulaService',
-        function($rootScope, $scope, tasks_list, $http, dragulaService) {
+    .controller('scrum_boardCtrl',
+        function($rootScope, $scope, tasks_list, $http, dragulaService, userCourseService) {
+
 
             loadCourses($scope);
 
@@ -32,6 +28,8 @@ angular
             }]
 
             $scope.task_groups = todo_task_groups.concat($scope.courseQuarters)
+            $scope.saved_courses = [];
+            $scope.selected_courses_ids = [];
             $scope.selected_courses = [];
             $scope.tasks_list = $scope.selected_courses;
 
@@ -46,8 +44,17 @@ angular
                 }
             };
 
+            $scope.savePlan = function() {
+                console.log($scope.tasks_list)
+                userCourseService.create({}, {
+                    user_course: {
+                        plan: $scope.tasks_list
+                    }
+                })
+            }
+
             $scope.$watchCollection(
-                "forms_advanced.selectize_planets",
+                "selected_courses_ids",
                 function(newValues, oldValues) {
                     oldValues = oldValues || []
                     newValues = newValues || []
@@ -60,6 +67,11 @@ angular
                                 return task.id == course.id;
                             });
                             if (undefined == isExist) {
+                                var saved_course = $scope.saved_courses.find({id: id});
+                                if(saved_course){
+                                    course.group = saved_course.attributes.group
+                                    course["$order"] = saved_course.attributes["$order"]
+                                }
                                 $scope.tasks_list.push(course);
                             }
                         })
@@ -72,6 +84,7 @@ angular
                             }
                         }
                     }
+                    startCheckConstraintsProcess($scope.tasks_list);
 
                 }
             );
@@ -109,7 +122,7 @@ angular
 
             });
 
-            function startCheckConstraintsProcess(tasks){
+            function startCheckConstraintsProcess(tasks) {
                 $scope.messages = [];
                 checkONLINECourseShouldAtMostOnceInQuarter(tasks);
                 checkLastQuarterShouldAtLeastOnePhysicalClasses(tasks);
@@ -117,50 +130,52 @@ angular
             }
 
             function checkONLINECourseShouldAtMostOnceInQuarter(tasks) {
+                console.log("checkONLINECourseShouldAtMostOnceInQuarter");
                 var quarter_tasks = getQuarterTasks(tasks);
-                _.each(["quarter_1", "quarter_2"], function(quarter_name){
+                _.each(["quarter_1", "quarter_2"], function(quarter_name) {
                     var count = _.countBy(quarter_tasks[quarter_name], function(task) {
-                        return task.site_name == "ONLINE" ? 'ONLINE': 'INCLASS';
+                        return task.site_name == "ONLINE" ? 'ONLINE' : 'INCLASS';
                     });
-                    if (count.ONLINE > 1){
-                        $scope.messages.push(quarter_name+": ONLINE course > 1")
+                    if (count.ONLINE > 1) {
+                        $scope.messages.push(quarter_name + ": ONLINE course > 1")
                     }
                 })
             }
 
-            function updateCoursePlanStatistics(tasks){
+            function updateCoursePlanStatistics(tasks) {
                 $scope.statistics
                 var quarter_tasks = getQuarterTasks(tasks);
-
-                // _.each(quarter_tasks, function())
-
             }
 
-            function checkLastQuarterShouldAtLeastOnePhysicalClasses(tasks){
+            function checkLastQuarterShouldAtLeastOnePhysicalClasses(tasks) {
                 var quarter_tasks = getQuarterTasks(tasks);
                 var count = _.countBy(quarter_tasks["quarter_3"], function(task) {
-                    return task.site_name == "ONLINE" ? 'ONLINE': 'INCLASS';
+                    return task.site_name == "ONLINE" ? 'ONLINE' : 'INCLASS';
                 });
                 console.log(count)
-                if (count.INCLASS == undefined){
-                    $scope.messages.push("quarter_3"+": should at least one course in classroom")
+                if (count.INCLASS == undefined) {
+                    $scope.messages.push("quarter_3" + ": should at least one course in classroom")
                 }
             }
 
-            function isMultipleCoursersOnTheSameDayOfWeek(tasks){
+            function isMultipleCoursersOnTheSameDayOfWeek(tasks) {
                 var inClassTasks = []
-                _.each(getQuarterTasks(tasks),function(coursesInAQuarter, quarter_name){
-                    var filteredCourses = _.filter(coursesInAQuarter, function(t){return t.site_name!="ONLINE"})
-                    var dayOfWeekFreq = _.groupBy(filteredCourses,function(t){return moment(t.start_date).format('dddd')})
-                    _.each(dayOfWeekFreq, function(values, dayOfWeek){
-                        if(values.length > 1){
-                            $scope.messages.push(quarter_name+ ": There are multiple courses on the same day :"+ dayOfWeek)
+                _.each(getQuarterTasks(tasks), function(coursesInAQuarter, quarter_name) {
+                    var filteredCourses = _.filter(coursesInAQuarter, function(t) {
+                        return t.site_name != "ONLINE"
+                    })
+                    var dayOfWeekFreq = _.groupBy(filteredCourses, function(t) {
+                        return moment(t.start_date).format('dddd')
+                    })
+                    _.each(dayOfWeekFreq, function(values, dayOfWeek) {
+                        if (values.length > 1) {
+                            $scope.messages.push(quarter_name + ": There are multiple courses on the same day :" + dayOfWeek)
                         }
                     })
                 })
             }
 
-            function getQuarterTasks(tasks){
+            function getQuarterTasks(tasks) {
                 var groups = _.groupBy(tasks, function(task) {
                     return task.group;
                 });
@@ -172,15 +187,30 @@ angular
 
             function loadCourses() {
                 var planets_data = $scope.selectize_planets_options = [];
-                $http({
-                    method: 'GET',
-                    url: '/api/v1/courses.json'
-                }).then(function(data) {
-                    _.each(data.data, function(item) {
-                        item.group = "todo"
-                        $scope.selectize_planets_options.push(item)
-                    })
-                });
+                var saved_plan = [];
+
+                userCourseService.get({
+                    user_course_id: 0
+                }).$promise
+                .then(function(saved_plan) {
+                    $scope.saved_courses = new Backbone.Collection(saved_plan.plan)
+                    return $scope.saved_courses;
+                }, function(err){return []})
+                .then(function(saved_courses){
+                    var courses = [];
+                    $http({
+                        method: 'GET',
+                        url: '/api/v1/courses.json'
+                    }).then(function(data) {
+                        _.each(data.data, function(item) {
+                            item.group = "todo"
+                            $scope.selectize_planets_options.push(item)
+                        })
+                        $scope.selected_courses_ids = saved_courses.pluck("id");
+                    });
+                })
+
+
 
                 $scope.selectize_planets_config = {
                     plugins: {
@@ -218,4 +248,4 @@ angular
             }
 
         }
-    ]);
+);

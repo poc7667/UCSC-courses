@@ -2,8 +2,7 @@
 <html ng-app="altairApp" document-events ng-click="onClick($event)" ng-keyup="onKeyUp($event)" ng-class="{ 'page_loading': pageLoading, 'page_loaded': pageLoaded, 'app_initialized': appInitialized && (!$state.is('login') && !$state.includes('error'))}">
     <head>
         <meta charset="UTF-8">
-        <title> AlphaFlea </title>
-
+        <title> UCSC Ext Course Plan </title>
         <link rel="icon" type="image/png" href="assets/img/favicon-16x16.png" sizes="16x16">
         <link rel="icon" type="image/png" href="assets/img/favicon-32x32.png" sizes="32x32">
         <!-- uikit  styles -->
@@ -18,27 +17,27 @@
         <script src="/node_modules/string/dist/string.min.js"></script>
         <script src="/node_modules/underscore/underscore-min.js"></script>
         <script src="/javascripts/backbone-min.js"></script>
-    <script>
-    var pp = (function(){
-    var MAX_DEPTH = 100;
-    return function(item, depth){
-    depth = depth || 0;
-    if (depth > MAX_DEPTH ) {
-    console.log(item);
-    return;
-    }
-    if (_.isObject(item)) {
-    _.each(item, function(value, key) {
-    console.group(key + ' : ' +(typeof value));
-    pp(value, depth + 1);
-    console.groupEnd();
-    });
-    } else {
-    console.log(item);
-    }
-    }
-    })();
-    </script>
+        <script>
+        var pp = (function(){
+        var MAX_DEPTH = 100;
+        return function(item, depth){
+        depth = depth || 0;
+        if (depth > MAX_DEPTH ) {
+        console.log(item);
+        return;
+        }
+        if (_.isObject(item)) {
+        _.each(item, function(value, key) {
+        console.group(key + ' : ' +(typeof value));
+        pp(value, depth + 1);
+        console.groupEnd();
+        });
+        } else {
+        console.log(item);
+        }
+        }
+        })();
+        </script>
         
         <!-- JS -->
         <!-- common functions -->
@@ -48,9 +47,12 @@
         <script src="bower_components/ngstorage/ngStorage.min.js"></script>
         <script src="bower_components/angular-cookie/angular-cookie.js"></script>
         <script src="bower_components/ng-token-auth/dist/ng-token-auth.min.js"></script>
+        <script src="bower_components/angular-resource/angular-resource.js"></script>
+        
         <!-- altairApp combined -->
         <!-- <script src="assets/js/flea_app.js"></script> -->
         <script src="app/app.js"></script>
+        <script src="app/js/services/user_course_service.js"></script>
         <script src="app/app.factory.js"></script>
         <script src="app/app.service.js"></script>
         <script src="app/app.directive.js"></script>
@@ -58,7 +60,7 @@
         <script src="app/app.states.js"></script>
         <script src="app/app.controller.js"></script>
         <script src="app/app.oc_lazy_load.js"></script>
-       
+
         <!-- main stylesheet -->
         <link rel="stylesheet" href="assets/css/main.css" media="all" id="main_stylesheet">
     </head>

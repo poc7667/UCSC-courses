@@ -36,32 +36,6 @@ ActiveRecord::Schema.define(version: 20160604031911) do
     t.string   "section_id"
   end
 
-  create_table "product_sources", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "products", force: :cascade do |t|
-    t.integer  "product_source_id"
-    t.float    "price"
-    t.string   "title"
-    t.string   "author"
-    t.date     "date"
-    t.datetime "post_time"
-    t.text     "content"
-    t.integer  "status",            default: 0
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-    t.string   "link"
-    t.integer  "sale_type",         default: 0
-    t.json     "location"
-    t.text     "image_links",       default: [],              array: true
-    t.string   "modifiers",                                   array: true
-  end
-
-  add_index "products", ["product_source_id"], name: "index_products_on_product_source_id", using: :btree
-
   create_table "user_courses", force: :cascade do |t|
     t.integer  "user_id"
     t.json     "plan"
@@ -100,6 +74,5 @@ ActiveRecord::Schema.define(version: 20160604031911) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true, using: :btree
 
-  add_foreign_key "products", "product_sources"
   add_foreign_key "user_courses", "users"
 end

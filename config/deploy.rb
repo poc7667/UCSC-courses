@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-lock '3.4.0'
+lock '3.4.1'
 
 set :application, ENV['APP_NAME']
 set :repo_url, 'git@bitbucket.org:poc7667/ucscextcourseserver.git'

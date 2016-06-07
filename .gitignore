@@ -12,8 +12,6 @@
 *.DS_Store
 .env
 public/assets
-OKINAWA
-TOKYO
 bin/delayed_job
 public/city
 .internal_env
@@ -23,7 +21,6 @@ doc/lazyair.csr
 .idea
 credential/ck.pem
 .env*
-config/deploy/production.rb
 lazyair.sublime-*
 .sublime-project*
 app/assets/javascripts/angular/ngUrlBind
@@ -31,4 +28,4 @@ app/assets/javascripts/angular/ngUrlBind
 *.sublime-workspace
 public/system/*
 dump/
-themes
+public/portal/node_modules

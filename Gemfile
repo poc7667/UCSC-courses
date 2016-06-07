@@ -103,7 +103,7 @@ gem "ses"
 
 
 # console auto complete
-gem "rb-readline"
+#gem "rb-readline"
 gem "hirb-unicode"
 gem "bond"
 gem 'rails-erd'

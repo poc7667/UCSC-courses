@@ -1,0 +1,4 @@
+tpl_folder_path: "./tpl"
+controller_folder_path: "./js/controllers"
+services_folder_path: "./js/services/"
+router_root_namespace: "admin"

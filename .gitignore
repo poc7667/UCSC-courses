@@ -30,6 +30,5 @@ app/assets/javascripts/angular/ngUrlBind
 *.pem
 *.sublime-workspace
 public/system/*
-public/portal/bower_components/*
 dump/
 themes

@@ -137,7 +137,7 @@ angular
                         return task.site_name == "ONLINE" ? 'ONLINE' : 'INCLASS';
                     });
                     if (count.ONLINE > 1) {
-                        $scope.messages.push(quarter_name + ": ONLINE course > 1")
+                        $scope.messages.push(quarter_name + ": ONLINE course > 1, credits hours will be only counted for one class")
                     }
                 })
             }

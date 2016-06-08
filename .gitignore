@@ -23,9 +23,7 @@ credential/ck.pem
 .env*
 lazyair.sublime-*
 .sublime-project*
-app/assets/javascripts/angular/ngUrlBind
 *.pem
 *.sublime-workspace
 public/system/*
 dump/
-public/portal/node_modules

@@ -28,7 +28,8 @@ angular
             }]
 
             $scope.task_groups = todo_task_groups.concat($scope.courseQuarters)
-            $scope.saved_courses = [];
+            $scope.saved_courses = new Backbone.Collection([]);
+
             $scope.selected_courses_ids = [];
             $scope.selected_courses = [];
             $scope.tasks_list = $scope.selected_courses;
@@ -97,12 +98,19 @@ angular
                         tasks.push(t)
                     }
                 })
+
+
                 var credit_hours = 0;
                 _.each(tasks, function(t) {
                     credit_hours += t.credit_hours;
                 })
                 return credit_hours;
             }
+
+            // $scope.statistics = function(){
+            //     var tasks = Backbone.collection(angular.copy$scope.tasks_list
+                
+            // }
 
             $scope.$on('tasks.drop', function(e, el, target, source) {
                 var tasks = $scope.tasks_list;
@@ -180,8 +188,8 @@ angular
                     return task.group;
                 });
                 delete groups.todo;
-                return groups
-            }
+                return groupcoll eangular.copyction(s}
+            
 
 
 
@@ -210,8 +218,6 @@ angular
                     });
                 })
 
-
-
                 $scope.selectize_planets_config = {
                     plugins: {
                         'remove_button': {
@@ -237,8 +243,8 @@ angular
                             var option_item = S(str).template(values).s
 
                             return '<div class="option">' +
-                                '<span class="title">' + option_item + '</span>' +
-                                '</div>';
+                                '<span classcoll ection(="title">' + option_item + '</sangular.copypan>' +'</div>';
+                                
                         },
                         item: function(planets_data, escape) {
                             return '<div class="item"><a href="' + escape(planets_data.url) + '" target="_blank">' + escape(planets_data.course_number) + ":" + escape(planets_data.course_name) + '</a></div>';

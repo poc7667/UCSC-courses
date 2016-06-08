@@ -227,7 +227,6 @@ angular
                         }else{
                             $scope.selected_courses_ids = [];
                         }
-                        
                     });
                 })
 
@@ -238,16 +237,17 @@ angular
                         }
                     },
                     maxItems: null,
+                    maxOptions: 50,
                     valueField: 'id',
                     labelField: 'course_name',
-                    searchField: 'course_name',
+                    searchField: ['course_name', 'site_name'],
                     create: false,
                     render: {
                         option: function(item, escape) {
-                            var str = "{{course}}, {{start_date}} - {{credit_hours}} credits {{location}} : {{course_number}}"
+                            var str = "{{course}}, {{start_date}} {{location}},{{course_number}}"
                             var values = {
                                 course: item.course_name,
-                                start_date: moment(item.start_date).format("YYYY/MM/DD ddd").toString(),
+                                start_date: moment(item.start_date).format("MM/DD (ddd)").toString(),
                                 credit_hours: item.credit_hours,
                                 location: item.site_name,
                                 course_number: item.course_number,
@@ -260,7 +260,8 @@ angular
                         },
                         item: function(planets_data, escape) {
                             // return '<div class="item"><a href="' + escape(planets_data.url) + '" target="_blank">' + escape(planets_data.course_number) + ":" + escape(planets_data.course_name) + '</a></div>';
-                            return '<div class="item"><a href="' + escape(planets_data.url) + '" target="_blank">' + escape(planets_data.course_name) + '</a></div>';
+                            return '<div class="item"><a href="' + escape(planets_data.url) + '" target="_blank">' + escape(planets_data.course_name) +" "+ escape(planets_data.course_number) + '</a></div>';
+                            // return '<div class="item"><a href="' + escape(planets_data.url) + '" target="_blank">' + escape(planets_data.course_name) + '</a></div>';
                         }
                     }
                 };

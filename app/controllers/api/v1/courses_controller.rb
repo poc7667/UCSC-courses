@@ -4,7 +4,7 @@ class Api::V1::CoursesController < ApplicationController
   # GET /courses
   # GET /courses.json
   def index
-    @courses = Course.all
+    @courses = Course.all.order("cate_name asc, course_name asc, start_date asc")
   end
 
   # GET /courses/1

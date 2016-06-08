@@ -8035,7 +8035,7 @@ pre.line-numbers > code {
 .selectize-dropdown-content {
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: 200px;
+  max-height: 600px;
 }
 .selectize-control.single .selectize-input,
 .selectize-control.single .selectize-input input {

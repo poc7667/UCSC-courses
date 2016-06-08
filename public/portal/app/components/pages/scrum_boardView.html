@@ -12,7 +12,6 @@ font {10px;}
             </div>
         </div>
     </div>
-
 </div>
 <div class="uk-grid">
     <div class="uk-width-medium-6-10 uk-row-first">
@@ -47,7 +46,7 @@ font {10px;}
         <div class="md-card">
             <div class="md-card-content" >
                 <div ng-show="suggestions.length > 0">
-                    <p ng-repeat="msg in suggestions">{{msg}}</p>
+                    <p>{{msg}}</p>
                 </div>
             </div>
         </div>
@@ -59,13 +58,22 @@ font {10px;}
                 </div>
             </div>
         </div>
-    <div >
-        <br>
-        <a ng-click="savePlan()" class="md-btn md-btn-primary md-btn-small md-btn-wave-light md-btn-icon waves-effect waves-button waves-light">
-            <i class="uk-icon-archive"></i>
-            Save Plan
-        </a>
-    </div>
+        <div >
+            <br>
+            <div ng-if="userProfile">
+                <a ng-click="savePlan()" class="md-btn md-btn-primary md-btn-small md-btn-wave-light md-btn-icon waves-effect waves-button waves-light">
+                    <i class="uk-icon-archive"></i>
+                    Save Plan
+                </a>
+            </div>
+            <div ng-if="userProfile==undefined">
+                <a ng-click="facebookRegisteration()" class="md-btn md-btn-primary md-btn-small md-btn-wave-light md-btn-icon waves-effect waves-button waves-light">
+                    <i class="uk-icon-archive"></i>
+                    Login for saving course plan
+                </a>
+            </div>
+
+        </div>
     </div>
     
 </div>

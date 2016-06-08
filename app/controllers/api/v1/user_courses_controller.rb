@@ -65,7 +65,12 @@ class Api::V1::UserCoursesController < ApplicationController
 
     # Use callbacks to share common setup or constraints between actions.
     def set_user_course
-      @user_course = UserCourse.where(user_id: current_user.id).order(:created_at).last
+      if current_user
+        @user_course = UserCourse.where(user_id: current_user.id).order(:created_at).last
+      else
+        @user_course = nil
+      end
+      
     end
 
 

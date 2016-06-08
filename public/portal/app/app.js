@@ -102,6 +102,14 @@ altairApp.config(function($authProvider) {
 
 altairApp.run(function($rootScope, $state, $auth, $location, $window) {
 
+    $rootScope.facebookRegisteration = function() {
+        $auth.authenticate('facebook', {
+            params: {
+                favorite_color: $rootScope.favoriteColor
+            }
+        });
+    }
+
     $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams) {
         $auth.validateUser().then(function(resp) {
             $rootScope.userProfile = resp;

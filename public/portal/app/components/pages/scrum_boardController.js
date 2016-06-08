@@ -46,7 +46,6 @@ angular
             };
 
             $scope.savePlan = function() {
-                console.log($scope.tasks_list)
                 userCourseService.create({}, {
                     user_course: {
                         plan: $scope.tasks_list
@@ -110,7 +109,6 @@ angular
             function updateStatistics(){
                 var selected_tasks = _.filter(angular.copy($scope.tasks_list), function(task){return task.group!="todo"})
                 var tasks = new Backbone.Collection(selected_tasks);
-                console.log(pp(selected_tasks));
                 $scope.statistics.credit_hours = tasks.reduce(function(total, value) { return total + value.get("credit_hours") }, 0);
                 $scope.statistics.cost = tasks.reduce(function(total, value) { return total + value.get("tuition_cost") }, 0);
 
@@ -148,7 +146,6 @@ angular
             }
 
             function checkONLINECourseShouldAtMostOnceInQuarter(tasks) {
-                console.log("checkONLINECourseShouldAtMostOnceInQuarter");
                 var quarter_tasks = getQuarterTasks(tasks);
                 _.each(["quarter_1", "quarter_2"], function(quarter_name) {
                     var count = _.countBy(quarter_tasks[quarter_name], function(task) {
@@ -173,7 +170,6 @@ angular
                 var count = _.countBy(quarter_tasks["quarter_3"], function(task) {
                     return task.site_name == "ONLINE" ? 'ONLINE' : 'INCLASS';
                 });
-                console.log(count)
                 if (count.INCLASS == undefined) {
                     $scope.messages.push("quarter_3" + ": should at least one course in classroom")
                 }
@@ -226,7 +222,12 @@ angular
                             item.group = "todo"
                             $scope.selectize_planets_options.push(item)
                         })
-                        $scope.selected_courses_ids = saved_courses.pluck("id");
+                        if (saved_courses.length>0){
+                            $scope.selected_courses_ids = saved_courses.pluck("id");
+                        }else{
+                            $scope.selected_courses_ids = [];
+                        }
+                        
                     });
                 })
 

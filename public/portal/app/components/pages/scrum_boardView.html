@@ -41,21 +41,27 @@ font {10px;}
             </table>
         </div>
     </div>
-    <div class="uk-width-medium-4-10" >
-        <h3 class="heading_b">Statistics</h3>
-        <div class="md-card">
-            <div class="md-card-content" >
-                <div ng-show="statistics">
-                    <p> Total hours: {{statistics.credit_hours}}</p>
-                    <p> Cost: {{statistics.cost}}</p>
+    <div class="uk-width-medium-4-10"  >
+        <div ng-show="statistics.credit_hours">
+            <h3 class="heading_b">Statistics</h3>
+            <div class="md-card">
+                <div class="md-card-content" >
+                    <div ng-show="statistics">
+                        <p> Total hours: {{statistics.credit_hours}}</p>
+                        <p> Cost: {{statistics.cost}}</p>
+                    </div>
                 </div>
             </div>
         </div>
-        <h3 class="heading_b">Warnings</h3>
-        <div class="md-card">
-            <div class="md-card-content" >
-                <div ng-show="messages.length > 0">
-                    <span class="uk-badge uk-badge-danger" ng-repeat="msg in messages">{{msg}}</span>
+        <div ng-show="tasks_list.length>0">
+            <h3 class="heading_b">Warnings</h3>
+            <div class="md-card">
+                <div class="md-card-content" ng-show="messages.length > 0">
+                    <ul ng-repeat="msg in messages">
+                        <li>
+                            <span class="uk-badge uk-badge-danger" >{{msg}}</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -73,7 +79,6 @@ font {10px;}
                     Login for saving course plan
                 </a>
             </div>
-
         </div>
     </div>
     

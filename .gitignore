@@ -13,7 +13,6 @@
 .env
 public/assets
 bin/delayed_job
-public/city
 .internal_env
 doc/ssl
 doc/lazyair.key

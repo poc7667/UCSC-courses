@@ -86,6 +86,7 @@ angular
                         }
                     }
                     startCheckConstraintsProcess($scope.tasks_list);
+                    updateStatistics();
 
                 }
             );
@@ -99,7 +100,6 @@ angular
                     }
                 })
 
-
                 var credit_hours = 0;
                 _.each(tasks, function(t) {
                     credit_hours += t.credit_hours;
@@ -107,10 +107,14 @@ angular
                 return credit_hours;
             }
 
-            // $scope.statistics = function(){
-            //     var tasks = Backbone.collection(angular.copy$scope.tasks_list
-                
-            // }
+            function updateStatistics(){
+                var selected_tasks = _.filter(angular.copy($scope.tasks_list), function(task){return task.group!="todo"})
+                var tasks = new Backbone.Collection(selected_tasks);
+                console.log(pp(selected_tasks));
+                $scope.statistics.credit_hours = tasks.reduce(function(total, value) { return total + value.get("credit_hours") }, 0);
+                $scope.statistics.cost = tasks.reduce(function(total, value) { return total + value.get("tuition_cost") }, 0);
+
+            }
 
             $scope.$on('tasks.drop', function(e, el, target, source) {
                 var tasks = $scope.tasks_list;
@@ -122,7 +126,8 @@ angular
                     return task.id == taskId;
                 })
                 foundTask.group = groupId;
-                startCheckConstraintsProcess(tasks)
+                startCheckConstraintsProcess(tasks);
+                updateStatistics();
 
                 setTimeout(function() {
                     $scope.$apply();
@@ -130,11 +135,16 @@ angular
 
             });
 
+
             function startCheckConstraintsProcess(tasks) {
                 $scope.messages = [];
                 checkONLINECourseShouldAtMostOnceInQuarter(tasks);
                 checkLastQuarterShouldAtLeastOnePhysicalClasses(tasks);
                 isMultipleCoursersOnTheSameDayOfWeek(tasks);
+            }
+
+            function eachQuarterShouldGreaterThanTwelveHours(tasks){
+
             }
 
             function checkONLINECourseShouldAtMostOnceInQuarter(tasks) {
@@ -147,11 +157,14 @@ angular
                     if (count.ONLINE > 1) {
                         $scope.messages.push(quarter_name + ": ONLINE course > 1, credits hours will be only counted for one class")
                     }
+                    var credit_hours = new Backbone.Collection(quarter_tasks[quarter_name]).reduce(function(sum, value){return sum + value.get("credit_hours")}, 0)
+                    if (credit_hours < 12){
+                        $scope.messages.push(quarter_name + ": each quarter should have credits hours > 12")
+                    }
                 })
             }
 
             function updateCoursePlanStatistics(tasks) {
-                $scope.statistics
                 var quarter_tasks = getQuarterTasks(tasks);
             }
 
@@ -188,9 +201,8 @@ angular
                     return task.group;
                 });
                 delete groups.todo;
-                return groupcoll eangular.copyction(s}
-            
-
+                return groups
+            }
 
 
             function loadCourses() {
@@ -244,10 +256,10 @@ angular
 
                             return '<div class="option">' +
                                 '<span classcoll ection(="title">' + option_item + '</sangular.copypan>' +'</div>';
-                                
                         },
                         item: function(planets_data, escape) {
-                            return '<div class="item"><a href="' + escape(planets_data.url) + '" target="_blank">' + escape(planets_data.course_number) + ":" + escape(planets_data.course_name) + '</a></div>';
+                            // return '<div class="item"><a href="' + escape(planets_data.url) + '" target="_blank">' + escape(planets_data.course_number) + ":" + escape(planets_data.course_name) + '</a></div>';
+                            return '<div class="item"><a href="' + escape(planets_data.url) + '" target="_blank">' + escape(planets_data.course_name) + '</a></div>';
                         }
                     }
                 };

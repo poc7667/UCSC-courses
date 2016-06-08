@@ -18,13 +18,6 @@ angular
         '$state',
         '$auth',
         function ($timeout,$scope,$window,$state, $auth) {
-            $scope.facebookRegisteration = function() {
-                $auth.authenticate('facebook', {
-                    params: {
-                        favorite_color: $scope.favoriteColor
-                    }
-                });
-            }
 
             $scope.user_data = {
                 name: "Lue Feest",

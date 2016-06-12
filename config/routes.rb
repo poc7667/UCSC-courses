@@ -4,7 +4,10 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1, defaults: {format: 'json'} do
       resources :courses
-      resources :user_courses
+
+      get 'shared_course_list/:uid' => "user_courses#shared_course_list"
+      resources :user_courses do
+      end
     end
   end
 

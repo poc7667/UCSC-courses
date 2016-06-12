@@ -1,15 +1,11 @@
 angular
     .module('altairApp', [angularDragula(angular)])
-    .controller('scrum_boardCtrl',
-        function($rootScope, $scope, tasks_list, $http, $location, dragulaService, userCourseService) {
-
-            
+    .controller('sharingCourseCtrl',
+        function($rootScope, $scope, $http, dragulaService, userCourseService, $stateParams) {
             loadCourses($scope);
 
-            $rootScope.page_full_height = true;
-            $rootScope.location = $location;
-            $scope.server_host = [$location.$$protocol, "://", $location.$$host, ":", $location.$$port].join("")
 
+            $rootScope.page_full_height = true;
             $scope.statistics = {};
             $scope.messages = [];
             $scope.quarters = ["quarter_1", "quarter_2", "quarter_3"];
@@ -49,6 +45,8 @@ angular
             };
 
             $scope.savePlan = function() {
+
+
                 userCourseService.create({}, {
                     user_course: {
                         plan: $scope.tasks_list
@@ -70,8 +68,10 @@ angular
                                 return task.id == course.id;
                             });
                             if (undefined == isExist) {
-                                var saved_course = $scope.saved_courses.find({id: id});
-                                if(saved_course){
+                                var saved_course = $scope.saved_courses.find({
+                                    id: id
+                                });
+                                if (saved_course) {
                                     course.group = saved_course.attributes.group
                                     course["$order"] = saved_course.attributes["$order"]
                                 }
@@ -109,11 +109,17 @@ angular
                 return credit_hours;
             }
 
-            function updateStatistics(){
-                var selected_tasks = _.filter(angular.copy($scope.tasks_list), function(task){return task.group!="todo"})
+            function updateStatistics() {
+                var selected_tasks = _.filter(angular.copy($scope.tasks_list), function(task) {
+                    return task.group != "todo"
+                })
                 var tasks = new Backbone.Collection(selected_tasks);
-                $scope.statistics.credit_hours = tasks.reduce(function(total, value) { return total + value.get("credit_hours") }, 0);
-                $scope.statistics.cost = tasks.reduce(function(total, value) { return total + value.get("tuition_cost") }, 0);
+                $scope.statistics.credit_hours = tasks.reduce(function(total, value) {
+                    return total + value.get("credit_hours")
+                }, 0);
+                $scope.statistics.cost = tasks.reduce(function(total, value) {
+                    return total + value.get("tuition_cost")
+                }, 0);
 
             }
 
@@ -144,7 +150,7 @@ angular
                 isMultipleCoursersOnTheSameDayOfWeek(tasks);
             }
 
-            function eachQuarterShouldGreaterThanTwelveHours(tasks){
+            function eachQuarterShouldGreaterThanTwelveHours(tasks) {
 
             }
 
@@ -157,8 +163,10 @@ angular
                     if (count.ONLINE > 1) {
                         $scope.messages.push(quarter_name + ": ONLINE course > 1, credits hours will be only counted for one class")
                     }
-                    var credit_hours = new Backbone.Collection(quarter_tasks[quarter_name]).reduce(function(sum, value){return sum + value.get("credit_hours")}, 0)
-                    if (credit_hours < 12){
+                    var credit_hours = new Backbone.Collection(quarter_tasks[quarter_name]).reduce(function(sum, value) {
+                        return sum + value.get("credit_hours")
+                    }, 0)
+                    if (credit_hours < 12) {
                         $scope.messages.push(quarter_name + ": each quarter should have credits hours > 12")
                     }
                 })
@@ -208,30 +216,34 @@ angular
                 var planets_data = $scope.selectize_planets_options = [];
                 var saved_plan = [];
 
-                userCourseService.get({
-                    user_course_id: 0
-                }).$promise
-                .then(function(saved_plan) {
-                    $scope.saved_courses = new Backbone.Collection(saved_plan.plan)
-                    return $scope.saved_courses;
-                }, function(err){return []})
-                .then(function(saved_courses){
-                    var courses = [];
-                    $http({
-                        method: 'GET',
-                        url: '/api/v1/courses.json'
-                    }).then(function(data) {
-                        _.each(data.data, function(item) {
-                            item.group = "todo"
-                            $scope.selectize_planets_options.push(item)
-                        })
-                        if (saved_courses.length>0){
-                            $scope.selected_courses_ids = saved_courses.pluck("id");
-                        }else{
-                            $scope.selected_courses_ids = [];
-                        }
-                    });
-                })
+                userCourseService.shared_course_list({
+                    uid: $stateParams.uid
+                }).$promise.then(function(saved_plan) {
+                        $scope.saved_courses = new Backbone.Collection(saved_plan.plan)
+                        return $scope.saved_courses;
+                    }, function(err) {
+                        return []
+                    })
+                    .then(function(saved_courses) {
+                        console.log(saved_courses)
+                        saved_courses = saved_courses || [];
+                        var courses = [];
+                        $http({
+                            method: 'GET',
+                            url: '/api/v1/courses.json'
+                        }).then(function(data) {
+                            _.each(data.data, function(item) {
+                                item.group = "todo"
+                                $scope.selectize_planets_options.push(item)
+                            })
+                            if (saved_courses.length > 0) {
+                                $scope.selected_courses_ids = saved_courses.pluck("id");
+                            } else {
+                                $scope.selected_courses_ids = [];
+                            }
+                        });
+                    })
+
 
                 $scope.selectize_planets_config = {
                     plugins: {
@@ -259,12 +271,10 @@ angular
                             var option_item = S(str).template(values).s
 
                             return '<div class="option">' +
-                                '<span classcoll ection(="title">' + option_item + '</sangular.copypan>' +'</div>';
+                                '<span classcoll ection(="title">' + option_item + '</sangular.copypan>' + '</div>';
                         },
                         item: function(planets_data, escape) {
-                            // return '<div class="item"><a href="' + escape(planets_data.url) + '" target="_blank">' + escape(planets_data.course_number) + ":" + escape(planets_data.course_name) + '</a></div>';
-                            return '<div class="item"><a href="' + escape(planets_data.url) + '" target="_blank">' + escape(planets_data.course_name) +" "+ escape(planets_data.course_number) + '</a></div>';
-                            // return '<div class="item"><a href="' + escape(planets_data.url) + '" target="_blank">' + escape(planets_data.course_name) + '</a></div>';
+                            return '<div class="item"><a href="' + escape(planets_data.url) + '" target="_blank">' + escape(planets_data.course_name) + " " + escape(planets_data.course_number) + '</a></div>';
                         }
                     }
                 };

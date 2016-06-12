@@ -1,5 +1,9 @@
 <style type="text/css">
 font {10px;}
+ul
+{
+    list-style-type: none;
+}
 </style>
 <div id="page_content" class="uk-height-1-1">
     <!-- {{userProfile}} -->
@@ -47,6 +51,7 @@ font {10px;}
             <div class="md-card">
                 <div class="md-card-content" >
                     <div ng-show="statistics">
+                        Share this plan with your friends by this  <a ng-href="{{server_host}}/portal/index.html#/pages/sharing_course/{{userProfile.uid}}" target="_blank">link</a>
                         <p> Total hours: {{statistics.credit_hours}}</p>
                         <p> Cost: {{statistics.cost}}</p>
                     </div>
@@ -73,6 +78,9 @@ font {10px;}
                     Save Plan
                 </a>
             </div>
+
+
+            
             <div ng-if="userProfile==undefined">
                 <a ng-click="facebookRegisteration()" class="md-btn md-btn-primary md-btn-small md-btn-wave-light md-btn-icon waves-effect waves-button waves-light">
                     <i class="uk-icon-archive"></i>

@@ -13,6 +13,11 @@ class Api::V1::UserCoursesController < ApplicationController
   def show
   end
 
+  def shared_course_list
+    user = User.find_by_uid(params["uid"])
+    @user_course = UserCourse.where(user_id: user.id).order(:created_at).last
+  end
+
   # GET /user_courses/new
   def new
     @user_course = UserCourse.new
@@ -70,7 +75,6 @@ class Api::V1::UserCoursesController < ApplicationController
       else
         @user_course = nil
       end
-      
     end
 
 

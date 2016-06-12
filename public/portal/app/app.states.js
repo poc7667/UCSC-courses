@@ -1210,6 +1210,23 @@ altairApp
                         pageTitle: 'Course Plan'
                     }
                 })
+                .state("restricted.pages.sharing_course", {
+                    url: "/sharing_course/:uid",
+                    templateUrl: 'app/components/pages/sharing_course.html',
+                    controller: 'sharingCourseCtrl',
+                    resolve: {
+                        deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                            return $ocLazyLoad.load([
+                                'lazy_dragula',
+                                'app/js/services/user_course_service.js',
+                                'app/components/pages/sharingCourseController.js'
+                            ],{serie: true});
+                        }],
+                    },
+                    data: {
+                        pageTitle: 'Sharing Course'
+                    }
+                })
                 .state("restricted.pages.search_results", {
                     url: "/search_results",
                     templateUrl: 'app/components/pages/search_resultsView.html',

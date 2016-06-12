@@ -12499,3 +12499,9 @@ body.pace-done > .page_preloader {
   font-size: 12px;
   background: white;
 }
+
+font {10px;}
+ul
+{
+list-style-type: none;
+}

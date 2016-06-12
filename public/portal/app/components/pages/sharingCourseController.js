@@ -9,6 +9,8 @@ angular
             $scope.statistics = {};
             $scope.messages = [];
             $scope.quarters = ["quarter_1", "quarter_2", "quarter_3"];
+            $scope.validEditingMode = {status: false};
+            
 
             $scope.courseQuarters = [{
                 id: 'quarter_1',

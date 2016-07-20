@@ -2,11 +2,13 @@
 lock '3.4.1'
 
 set :application, ENV['APP_NAME']
-set :repo_url, 'git@bitbucket.org:poc7667/ucscextcourseserver.git'
+set :repo_url, 'git@github.com:poc7667/UCSC-courses.git'
 set :deploy_to, ENV["PROJECT_PATH"]
 set :branch, ENV["BRANCH"] || `git rev-parse --abbrev-ref HEAD`.chop
-set :project_root_path, ENV['LOCAL_PROJECT_PATH']
-set :user, ENV["USER_NAME"]
+set :project_root_path, File.dirname(File.expand_path('./../',__FILE__))
+set :user, "deploy"
+set :nginx_sites_enabled_path, "/etc/nginx/sites-enabled/"
+
 set :use_sudo, false
 set :rbenv_ruby, "2.2.2"
 set :rbenv_path, "#{ENV['USER_HOME']}/.rbenv"
@@ -44,6 +46,13 @@ end
 
 namespace :deploy do
 
+  task :upload_nginx_cfg do
+    on roles(:app) do |host|
+      upload! "#{Dir.pwd}/config/nginx.conf", "#{deploy_to}/current/config/nginx.conf"
+      execute " cd #{fetch(:nginx_sites_enabled_path)} && sudo ln -sf #{deploy_to}/current/config/nginx.conf #{ENV['APP_NAME']}  &&  sudo /etc/init.d/nginx restart "
+    end
+  end  
+
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
       # Here we can do anything such as:
@@ -56,5 +65,6 @@ namespace :deploy do
 end
 
 
+after 'deploy:published', 'deploy:upload_nginx_cfg'
 # after 'deploy:published', 'system:misc_tasks'
 # after 'deploy:published', 'cronjob:update'
